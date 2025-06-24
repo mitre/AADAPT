@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/techniques/ADT3021.002", {data:[{}],fetch:{},mutations:[]});

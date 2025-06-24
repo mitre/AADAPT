@@ -1,0 +1,875 @@
+- &acquire_accounts
+  id: ADT3001
+  name: Acquire Accounts
+  object-type: technique
+  description: |
+     An adversary may create valid digital asset system accounts to facilitate siphoning stolen funds.<br><br>Securing valid existing accounts is crucial for attackers to effectively steal and launder digital assets. <br><br>Adversaries can acquire accounts by:<br><ul><li>Using fake identities: Creating entirely fictitious personas with fabricated names, addresses, and other personal details. </li><li>Stealing identities: Utilizing stolen personal information, such as Social Security numbers or passports, to create seemingly legitimate accounts.</li></ul><br>Adversaries can utilize acquired accounts for later stages in a cyberattack to:<br><ul><li>Minimize detection: Diversifying transactions across multiple accounts reduces the visibility of individual amounts, making them harder to flag by automated monitoring systems.</li><li>Facilitate laundering: Employing multiple accounts enables layered laundering techniques, like converting assets or using intermediary accounts, to further obscure the origin of stolen funds.</li><li>Increase operational efficiency: Multiple accounts offer redundancy and flexibility, allowing attackers to pivot between them and optimize their activities.</li></ul>
+  tactics:
+     - "{{resource_development.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+
+- &aggregate_private_key_generation_data
+  id: ADT3002
+  name: Aggregate Private Key Generation Data
+  object-type: technique
+  description: |
+     An adversary can collect and aggregate information concerning how private keys are generated in a digital asset system.<br><br>An adversary may analyze key-generation software, particularly if it is open source or the binaries are leaked, and reverse-engineer it to understand the exact process by which keys are generated and identify any flaws are present. Based on this information, the adversary may attempt to monitor network traffic, especially during the key generation process and capture sensitive data or identify patterns that can be exploited. Some examples of this include being able to replicate or predict entropy values used to generate randomness if the sources used for this are insufficient or have detectable patterns which could be exploited. With sufficient information about the entropy sources and the algorithm, the adversary can replicate the key generation process to predict private keys.<br><br>An adversary who is able to glean information about private keys in this way may then use the information obtained to impersonate privileged users in the system, carry out fraudulent transactions, and undermine stability or integrity of consensus and validation processes.
+  tactics:
+     - "{{collection.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Central bank digital currency (CBDC) information security and operational risks to central banks.](https://www.bis.org/publ/othp81.pdf)"
+      - "[[2] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+      - "[[3] Merkle Science. (2022, March 31). Hack Track: Analysis of Ronin Network Exploit. Retrieved March 11, 2025.](https://blog.merklescience.com/hacktrack/hack-track-analysis-of-ronin-network-exploit-merkle-science)"
+
+- &burn_wallets
+  id: ADT3031
+  name: Burn Wallets
+  object-type: technique
+  description: |
+     An adversary can transfer stolen or illicit funds to burn wallets, wallets that have been abandoned or have lost their private keys, to make it impossible for anyone to recover the assets. <br><br>Adversaries utilize burn wallets for:  <br><ul><li>Market Manipulation: An attacker can create artificial scarcity by burning a significant amount of assets, potentially driving up the price of the remaining assets. This can be exploited for profit if the attacker holds a substantial amount of the cryptocurrency.</li><li>Sabotage: Burning assets can be used as a form of sabotage against a competing project or platform. By reducing the supply of assets, the attacker might destabilize the project's economy or undermine confidence among investors and users.</li><li>Reputation Damage: An unexpected or unexplained asset burn can create panic among users, leading to a sell-off and a drop in the asset’s value. An attacker might exploit this panic to buy assets at a lower price.</li><li>Fraud: An adversary may utilize burn wallets to induce scarcity and mislead users. Burning assets may also be used in larger schemes like pump-and-dumps, exit scams, and money laundering to deceive stakeholders and obscure illicit activities.</li></ul><br>These actions can have significant negative impacts on the affected digital asset system, including loss of trust, market volatility, and financial losses for users.
+  tactics:
+     - "{{impact.id}}"
+  references:
+      - "[[1] Ajiboye, T. (2024, September 4). Solana Scammers Are Burning Tokens from Inside User Wallets. Retrieved March 25, 2025.](https://www.coinspeaker.com/solana-scammers-burning-tokens/)"
+      - "[[2] Beganski, A. (2022, July 19). What is a Token Burn? How Crypto is Removed From Circulation. Retrieved March 25, 2025.](https://decrypt.co/resources/what-is-a-token-burn-how-crypto-is-removed-from-circulation)"
+      - "[[3] Houy, S., Schmid, P., & Bartel, A. (2023). Security Aspects of Cryptocurrency Wallets - A Systematic Literature Review. ACM Computing Surveys, 56(1).](https://doi.org/10.1145/3596906)"
+
+- &chain_reorganization
+  id: ADT3003
+  name: Chain Reorganization
+  object-type: technique
+  description: |
+     An adversary may create a longer alternative blockchain to override the existing chain, enabling them to manipulate the transaction history or evade detection.<br><br>Chain reorganization attacks occur when an adversary deliberately creates a competing blockchain that replaces the legitimate chain, disrupting the network’s consensus and potentially reversing transactions. In blockchain systems, the protocol prioritizes the longest or most valid chain, meaning that if an attacker can produce a longer chain than the one accepted by the network, the blockchain will reorganize to adopt the attacker’s chain. This can invalidate transactions from the original chain, allowing the attacker to manipulate the ledger for malicious purposes. These attacks exploit the decentralized nature of blockchain systems and the consensus mechanisms that define them.<br><br>An adversary may manipulate the blockchain via a chain reorganization attack in order to undermine trust in the system, erase evidence of their activities, or for financial gain.
+  tactics:
+     - "{{fraud.id}}"
+     - "{{impact.id}}"
+  references:
+      - "[[1] Singh, O. (2022, May 29). What is chain reorganization in blockchain technology? Retrieved March 18, 2025.](https://cointelegraph.com/explained/what-is-chain-reorganization-in-blockchain-technology)"
+
+- &longrange_attack
+  id: ADT3003.001
+  name: Long-Range Attack
+  object-type: technique
+  description: |
+     An adversarial validator in a blockchain using Proof-of-Stake (PoS) consensus may create an illegitimate branch with at least the same length and genesis block as the original chain. This new branch may contain a partially or completely different transaction history than the original. Unlike Proof-of-Work systems, which require immense computational power to create many new blocks in a branch, it is possible for a malicious validator in a PoS blockchain to build a secondary branch that can overtake the original chain using minimal resource expenditure.<br><br>New nodes or participants which rejoin the blockchain after extended time offline will not be able to recognize which branch should be trusted and are susceptible to unintentionally replacing the original blockchain with the attacker chain if selected to be validators. This replacement would compromise blockchain integrity and potentially result in significant financial losses and disruption for all participants.
+  subtechnique-of: "{{chain_reorganization.id}}"
+  references:
+      - "[[1] Deirmentzoglou, E. (2018, May 31). Rewriting History: A Brief Introduction to Long Range Attacks. Retrieved March 7, 2025.](https://blog.positive.com/rewriting-history-a-brief-introduction-to-long-range-attacks-54e473acdba9)"
+      - "[[2] Gaži, P., Kiayias, A., & Russell, A. (2018, June 1). Stake-Bleeding Attacks on Proof-of-Stake Blockchains.](https://doi.org/10.1109/CVCBT.2018.00015)"
+
+- &channel_wormholing
+  id: ADT3032
+  name: Channel Wormholing
+  object-type: technique
+  description: |
+     An adversary may establish unauthorized connections in a Hyperledger Fabric channel to leak sensitive ledger information about all members.<br><br>Within Hyperledger Fabric's secure channels, a "wormhole" attack exploits a compromised member to establish an unauthorized connection with an external entity. This malicious tunnel allows the attacker to steal sensitive ledger information from all channel members, jeopardizing their privacy and trust in the network. <br><br>To perform this technique, an adversary within a private network establishes a virtual private network (VPN) with an external network, surreptitiously leaking confidential information from its own private network. This can be executed without requiring any knowledge from the honest members of the private network. <br><br>The impact is particularly severe in Hyperledger Fabric channels, where the channel serves as a means to segregate a group of identities from the broader network. As the action unfolds, if a single member within the channel collaborates with an external adversary, a wormhole is created, resulting in the exposure of sensitive information belonging to all members within the channel.
+  tactics:
+     - "{{reconnaissance.id}}"
+  references:
+      - "[[1] Andola, N., Raghav, Gogoi, M., Venkatesan, S., & Verma, S. (2019). Vulnerabilities on Hyperledger Fabric. Pervasive and Mobile Computing, 59(1574-1192), 101050.](https://doi.org/10.1016/j.pmcj.2019.101050)"
+      - "[[2] Baninemeh, E., Jansen, S., Labunets, K., & Slikker, M. (2024). A Security Risk Assessment Method for Distributed Ledger Technology (DLT) based Applications: Three Industry Case Studies.](https://arxiv.org/pdf/2401.12358)"
+      - "[[3] Cyber-Trust. (2020). Distributed ledger technology for enhanced accountability.](https://cyber-trust.eu/wp-content/uploads/2021/03/D7.4.pdf)"    
+      - "[[4] Ethereum Security. (2022). Attack Surfaces of Hyperledger Fabric. Retrieved March 17, 2025.](https://cosimo.gitbook.io/ethereum-security/blockchain-misc/attack-surfaces-of-hyperledger-fabric)"
+      - "[[5] Mallah, R. A., Lopez, D., & Farooq, B. (2021). Cyber-Security Risk Assessment Framework for Blockchains in Smart Mobility. IEEE Open Journal of Intelligent Transportation Systems, 2, 294–311.](https://doi.org/10.1109/ojits.2021.3106863)"
+
+- &circumvent_account_limits
+  id: ADT3004
+  name: Circumvent Account Limits
+  object-type: technique
+  description: |
+     An adversary may circumvent preconfigured account limits to exfiltrate stolen funds and evade defenses.<br><br>Digital asset systems often apply various account limits enable further control of user actions on their platform. Account limits serve as predetermined restrictions on user transactions, ensuring compliance with regulatory standards and preventing illicit activities. They may include limitations on transaction amount, withdrawal amount, or total number or value of transactions in a given time period. These limits are designed to mitigate unauthorized access, money laundering, and other fraudulent practices, providing a secure environment for financial transactions. Adversaries, however, may attempt to circumvent these account limits as a means to exfiltrate stolen funds or engage in illicit financial activities beyond the permitted thresholds.
+  tactics:
+     - "{{defense_evasion.id}}"
+  references:
+      - "[[1] Behnke, R. (2022, June 10). What Is KYC in Crypto and What Are Its Limitations? Retrieved March 18, 2025.](https://www.halborn.com/blog/post/what-is-kyc-in-crypto-and-what-are-its-limitations)"
+      - "[[2] Siebenbrunner, C., & Taudes, A. (2024). Why CBDCs will likely not support full smart contracts.](https://doi.org/10.57938/aaebf4b1-6fe8-490d-b40f-84328df75adf)"
+      - "[[3] United States Department of Homeland Security. (2023). Combatting Illicit Activity Utilizing Financial Technologies and Cryptocurrencies.](https://www.dhs.gov/sites/default/files/2022-09/Combatting%20Illicit%20Activity%20.pdf)"
+
+- &transaction_limit
+  id: ADT3004.001
+  name: Transaction Limit
+  object-type: technique
+  description: |
+     An adversary may circumvent the transaction limit to evade identification during exfiltration.<br><br>Transaction limits are essential safeguards in digital asset systems, acting as speed bumps to halt suspicious activity and prevent large-scale fraud. Unfortunately, these safeguards can become targets themselves, as adversaries seek to circumvent transaction limits and slip under the radar with stolen funds. This technique describes various methods attackers might employ to bypass these restrictions and evade detection.<br><br>Adversaries can circumvent transaction limits by:<br><ul><li>Splitting transactions: Attackers might break down large illicit transactions into numerous smaller ones, each falling below the individual limit and appearing innocuous. This "smurfing" approach can exploit platforms with daily or weekly cumulative limits. </li><li>Utilizing multiple accounts: Attackers might create and utilize a network of fake accounts, each sending smaller transactions under the radar. This "ant colony" approach leverages the combined volume of numerous accounts to move large sums undetected. </li><li>Abusing platform loopholes: Attackers might exploit technical flaws or inconsistencies in platform rules to send larger transactions despite exceeding the stated limit. This could involve manipulating specific currencies, exploiting timing differences, or leveraging platform misconfigurations. </li><li>Collusion with insiders: In rare cases, attackers might bribe or coerce platform employees to bypass transaction limits for them, facilitating the movement of illicit funds. </li><li>Third-party services: Attackers might utilize unregulated or poorly secured third-party services to process their transactions, bypassing the originating platform's limits and scrutiny.</li></ul>
+  subtechnique-of: "{{circumvent_account_limits.id}}"
+  references:
+      - "[[1] Paradigm Junction. (2023, March 14). Digital Pounds - Part 4: Digital Identities. Retrieved March 17, 2025.](https://www.paradigmjunction.com/publications/digital-pounds-part-4-digital-identities)"
+      - "[[2] Sharife, K., Strozyk, J., & Khalili, J. (2023, May 25). Internal Report Suggests Security Lapses at Hacked Crypto Exchange Bitfinex. Retrieved March 17, 2025.](https://www.wired.com/story/security-lapses-at-hacked-crypto-exchange-bitfinex/)"
+      - "[[3] Siebenbrunner, C., & Taudes, A. (2024). Why CBDCs will likely not support full smart contracts.](https://doi.org/10.57938/aaebf4b1-6fe8-490d-b40f-84328df75adf)"
+
+- &withdrawal_limit
+  id: ADT3004.002
+  name: Withdrawal Limit
+  object-type: technique
+  description: |
+     An adversary may circumvent the withdrawal limit to exfiltrate large amounts of stolen funds.<br><br>Digital asset platforms often impose withdrawal limits to combat fraud and money laundering.<br><br>Adversaries can circumvent withdrawal limits by:<br><ul><li>Exploiting platform vulnerabilities: Attackers may target software bugs or weaknesses in the platform's withdrawal processing system to manipulate transactions or bypass controls. This could involve injecting malicious code, exploiting logic flaws, or manipulating internal APIs.</li><li>Social engineering scams: By impersonating users or platform officials, attackers might trick victims into authorizing large withdrawals or handing over account credentials. Phishing emails, phone calls, or fake support interactions are common tactics.</li><li>Fake accounts and stolen identities: Attackers may create fraudulent accounts with stolen personal information to exploit platform policies or incentives that offer higher withdrawal limits for new users.</li></ul>
+  subtechnique-of: "{{circumvent_account_limits.id}}"
+  references:
+      - "[[1] Siebenbrunner, C., & Taudes, A. (2024). Why CBDCs will likely not support full smart contracts.](https://doi.org/10.57938/aaebf4b1-6fe8-490d-b40f-84328df75adf)"
+      - "[[2] FATF - Interpol - Egmont Group. (2023). Illicit Financial Flows from Cyber-Enabled Fraud.](https://www.fatf-gafi.org/content/dam/fatf-gafi/reports/Illicit-financial-flows-cyber-enabled-fraud.pdf.coredownload.inline.pdf)"
+      - "[[3] Trend Micro. (2019, February 8). Banks Under Attack: Tactics and Techniques Used to Target Financial Organizations. Retrieved March 17, 2025.](https://www.trendmicro.com/vinfo/us/security/news/cybercrime-and-digital-threats/banks-under-attack-tactics-and-techniques-used-to-target-financial-organizations)"
+
+- &crosschain_swaps_hopping
+  id: ADT3005
+  name: Cross-Chain Swaps (Hopping)
+  object-type: technique
+  description: |
+     An adversary may exchange illicitly acquired digital assets across multiple blockchains in order to obscure their origin and evade detection.<br><br>This technique, known as cross-chain hopping, exploits the interoperability of blockchain networks to move assets between chains, making it harder to trace the adversaries' activities.<br><br>Adversaries can move stolen or illicit funds via cross-chain hopping by leveraging anonymous wallets, blockchain bridges, decentralized exchanges (DEXs), and atomic swaps. This combination of anonymous wallets and cross-chain hopping fragments the transaction history, mixes the funds, and exploits differences in security measures or transparency across chains, making it significantly harder for investigators and blockchain analysis tools to trace the origin of the funds or link them to the illicit activity.<br><br>Cross-chain hopping is commonly used in money laundering schemes or other cryptocurrency-related financial crimes, often with the goal of financial gain.
+  tactics:
+     - "{{defense_evasion.id}}"
+  references:
+      - "[[1] OSWAR - Open Standard Web3 Reference. (n.d.). Chain Hopping. Retrieved March 25, 2025.](https://www.oswar.org/attack/0)"
+      - "[[2] PYMNTS. (2022, August 11). Elliptic: Cross-Chain Payments Bridges Are DeFi’s Next Big AML Battleground. Retrieved March 25, 2025.](https://www.pymnts.com/cryptocurrency/2022/elliptic-cross-chain-payments-bridges-are-defi-next-big-aml-battleground/)"
+
+- &eclipse_attack
+  id: ADT3006
+  name: Eclipse Attack
+  object-type: technique
+  description: |
+     An adversary may control a target node's network connections, using a botnet to feed it false information. This allows the adversary to isolate and manipulate the target node which can lead to further attacks compromising the network's integrity and functionality.<br><br>In an eclipse attack, an adversary exploits the bandwidth constraints in a decentralized network which limit the number of simultaneous connections for any given node to a small, localized set. The attacker targets a specific victim node and typically sets up a botnet which controls all information received from neighboring network connections.<br><br>Afterwards the adversary forces the victim node to reconnect to the network by launching a DDoS attack. Upon reconnection, the botnet controls the node's connections, feeding it false information. This isolation allows the attacker to manipulate the victim node for various malicious activities, such as double-spending and miner power disruption, compromising the network's integrity and functionality.
+  tactics:
+     - "{{fraud.id}}"
+  references:
+      - "[[1] Chainlink. (2023, October 18). Eclipse Attack Meaning. Retrieved March 7, 2025.](https://www.ledger.com/academy/glossary/eclipse-attack)"
+      - "[[2] Heilman, E., Kendler, A., Zohar, A., & Goldberg, S. (2015). Eclipse Attacks on Bitcoin’s Peer-to-Peer Network (p. 129).](https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-heilman.pdf)"
+
+- &exploit_blockchain_technology_specific_vulnerabilities
+  id: ADT3013
+  name: Exploit Blockchain Technology Specific Vulnerabilities
+  object-type: technique
+  description: |
+     An adversary can exploit vulnerabilities specific to the underlying blockchain technology of a digital asset system.<br><br>An adversary can exploit vulnerabilities inherent to the specific blockchain technology powering a digital asset system, targeting weaknesses unique to its design and implementation. While all blockchains share foundational principles, such as decentralized ledger systems and cryptographic security, each blockchain framework—such as Hyperledger Fabric, Hyperledger Besu, R3 Corda, and XRP Ledger—has distinct characteristics that define how users interact with smart contracts, execute operations, and process transactions. These differences arise from variations in consensus mechanisms, permission models, and smart contract functionality, which can introduce unique attack surfaces.<br><br>For example, certain blockchains may have flaws in their consensus algorithms, allowing adversaries to manipulate transaction validation, while others may have vulnerabilities in their smart contract execution processes, enabling unauthorized operations. By identifying and exploiting these specific weaknesses, adversaries can carry out illegitimate transactions, disrupt the integrity of the system, or compromise sensitive data. The diversity in blockchain architectures means that security measures must be tailored to address the unique risks associated with each implementation, as adversaries often target these nuances to bypass defenses and achieve their objectives.
+  tactics:
+     - "{{execution.id}}"
+  references:
+      - "[[1] Andola, N., Raghav, Gogoi, M., Venkatesan, S., & Verma, S. (2019). Vulnerabilities on Hyperledger Fabric. Pervasive and Mobile Computing, 59(59), 101050.](https://doi.org/10.1016/j.pmcj.2019.101050)"
+      - "[[2] Hyperledger Foundation. (2021, November 18). Hyperledger Fabric Security Threats: What to Look For. Retrieved March 24, 2025.](https://www.lfdecentralizedtrust.org/blog/2021/11/18/hyperledger-fabric-security-threats-what-to-look-for)"
+      - "[[3] Tanner, J., & Khan, R. (2021, May 4). Technology Review of Blockchain Data Privacy Solutions.](https://doi.org/10.48550/arXiv.2105.01316)"       
+      - "[[4] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &exploit_consensus_logic
+  id: ADT3007
+  name: Exploit Consensus Logic
+  object-type: technique
+  description: |
+     An adversary may exploit weaknesses in consensus mechanisms to compromise the integrity of a decentralized system and perform unauthorized transactions.<br><br>Consensus mechanisms are responsible for keeping decentralized networks secure and ensuring blockchain integrity in an automated process. Weaknesses in the consensus logic present adversaries the opportunity to manipulate other parties in the network, tamper with the blockchain data, and carry out unauthorized transactions. By exploiting these vulnerabilities, adversaries can disrupt the network’s operations, gain unauthorized financial benefits, and undermine the trust and reliability of the blockchain system.
+  tactics:
+     - "{{fraud.id}}"
+     - "{{execution.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+      - "[[2] Fawole, J., Malanii, O., & Ciattaglia, L. (2023, April 6). Consensus Mechanisms In Blockchain: A Deep Dive Into The Different Types. Retrieved March 20, 2025.](https://hacken.io/discover/consensus-mechanisms/)"
+
+- &circumvent_voting_majority_control
+  id: ADT3007.001
+  name: Circumvent Voting Majority Control
+  object-type: technique
+  description: |
+     An adversary may seize control over more than 51% of a network's hash rate and add new blocks to the chain at a rate faster than all other validators on the network. As a result, they may be able to execute unauthorized transactions and changes, damaging blockchain integrity. In a normally functioning blockchain network, a miner cannot add new blocks without validation from other participants. However, in cases where one party gains disproportionate control over the computational power in the network, they may also gain disproportionate power to validate transactions and take control over the network. Generally, this requires utilizing computational resources from a third party.
+  subtechnique-of: "{{exploit_consensus_logic.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris: closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.htm)"
+      - "[[2] Mcshane, G. (2021, October 12). What Is a 51% Attack? Retrieved March 6, 2025.](https://www.coindesk.com/learn/what-is-a-51-attack/)"
+      - "[[3] MIT Digital Currency Initiative. (n.d.). 51% Attacks. Retrieved March 6, 2025.](https://dci.mit.edu/51-attacks)"
+      - "[[4] OSWAR - Open Standard Web3 Reference. (2025). 51% Attack. Retrieved March 6, 2025.](https://www.oswar.org/attack/50)"
+
+- &doublespending_attack
+  id: ADT3007.002
+  name: Double-Spending Attack
+  object-type: technique
+  description: |
+     An adversary may exploit the consensus logic to spend the same digital assets multiple times to create fraudulent transactions. Different variants of this attack include: race attacks, Finney attacks, and 51% attacks.<br><br>Double-spending attacks allow adversaries to exploit vulnerabilities in blockchain networks to spend the same cryptocurrency multiple times, undermining trust and causing financial losses. One such example is a 51% attack, where an entity gains control of more than half of a network’s hashing power or validation mechanisms. With majority control, attackers can manipulate transaction consensus, reverse payments, and dictate the allocation of currency rewards. Smaller or newer blockchain networks are particularly vulnerable to this type of attack due to their limited number of participants. <br><br>Other double-spending methods include race attacks, where adversaries exploit network lag by sending two conflicting transactions: one to a recipient and another to the blockchain to retain ownership of the funds. Similarly, Finney attacks involve miners pre-mining a block with conflicting transactions to spend cryptocurrency twice before network confirmation. Both attacks rely on unconfirmed transactions and can be mitigated by rejecting transactions that have not been validated by the blockchain.
+  subtechnique-of: "{{exploit_consensus_logic.id}}"
+  references:
+      - "[[1] CFI Team. (n.d.). Double-Spending. Retrieved March 11, 2025.](https://corporatefinanceinstitute.com/resources/cryptocurrency/double-spending/)"
+      - "[[2] Cryptopedia Staff. (2021, June 24). What Is Double-Spending? Retrieved March 14, 2025.](https://www.gemini.com/cryptopedia/double-spending-problem-crypto)"
+      - "[[3] Investopedia Team. (2024, May 15). Understanding Double-Spending and How to Prevent Attacks. Retrieved March 14, 2025.](https://www.investopedia.com/terms/d/doublespending.asp)"
+      - "[[4] Reiff, Nathan. (2024, June 1). How Does a Block Chain Prevent Double-Spending of Bitcoins? Retrieved March 14, 2025.](https://www.investopedia.com/ask/answers/061915/how-does-block-chain-prevent-doublespending-bitcoins.asp)"
+
+- &sybil_node_creation
+  id: ADT3007.004
+  name: Sybil Node Creation
+  object-type: technique
+  description: |
+     In a Sybil attack, an adversary creates numerous fake nodes, or Sybil nodes, on a blockchain to manipulate the network's honest protocol behavior and gain undue influence. The attacker adopts these fake identities with malicious intent, aiming to disrupt peer-to-peer network operations by hijacking or dropping messages. The mechanics of a Sybil attack can vary, but typically involve a single node operating many fake identities. This can lead to honest nodes being consistently outvoted, 51% attacks where the attacker controls over half of the network's total computing power, and both direct and indirect attacks on honest nodes.
+  subtechnique-of: "{{exploit_consensus_logic.id}}"
+  references:
+      - "[[1] Baninemeh, E., Jansen, S., & Labunets, K. (2024, November 7). A Security Risk Assessment Method for Distributed Ledger Technology (DLT) based Applications: Three Industry Case Studies.](https://arxiv.org/pdf/2401.12358)"
+      - "[[2] Coinbase. (2025). What is a sybil attack in crypto? Retrieved March 14, 2025.](https://www.coinbase.com/learn/crypto-glossary/what-is-a-sybil-attack-in-crypto)"
+      - "[[3] Douceur, J. R. (2002, March 7). The Sybil Attack.](https://dl.acm.org/doi/10.5555/646334.687813)"
+      - "[[4] Levine, B., Shields, C., & Margolin, N. (n.d.). A Survey of Solutions to the Sybil Attack.](https://nymity.ch/sybilhunting/pdf/Levine2006a.pdf)"
+
+- &exploit_external_services
+  id: ADT3008
+  name: Exploit External Services
+  object-type: technique
+  description: |
+     An adversary may exploit the vulnerabilities in external services to gain unauthorized access to connected digital asset systems.<br><br>Digital asset systems often rely on various external services for functionalities like trading, wallet management, and payments. While convenient, these integrations create an expanded attack surface for adversaries seeking unauthorized access. This technique involves exploiting vulnerabilities in compromised external services to gain a foothold within the digital asset system.<br><br>Adversaries can exploit various types of external services such as:<br><ul><li>Trading platforms: Attackers might exploit API vulnerabilities, phishing campaigns, or malware targeting users to steal login credentials or manipulate trade orders.</li><li>Wallet managers: Phishing, malware, and social engineering scams can trick users into revealing private keys or seed phrases, granting attackers access to their digital assets.</li><li>Payment gateways: Insecure payment processes or vulnerabilities in integration points can enable attackers to intercept or divert funds during transactions.</li><li>Portfolio trackers: Malware or compromised accounts can expose sensitive information about holdings and trading habits, aiding attackers in targeting specific users.</li><li>Websites: Attackers can create fake websites resembling legitimate platforms to trick users into entering login credentials or clicking malicious links. Typosquatting involves registering domain names with intentional misspellings of legitimate sites, potentially leading users to phishing pages. Additionally, outdated website software or plugins can harbor vulnerabilities that allow attackers to inject malicious code, steal user data, or redirect users to phishing sites.</li></ul><br>The primary methods by which an adversary exploits external services are by:<br><ul><li>Credential theft: Phishing, malware, and credential stuffing attacks target users to steal login credentials and access.</li><li>API vulnerabilities: Unsecured APIs used by external services can be exploited to inject malicious code, manipulate data, or bypass authentication.</li><li>Supply chain attacks: Compromising third-party providers used by external services can grant attackers access to a wider network of connected systems.</li><li>Social engineering: Manipulating employees or users of external services can trick them into revealing sensitive information or granting unauthorized access.</li><li>Zero-day exploits: Newly discovered vulnerabilities in external services before vendors release patches can be exploited for quick access.</li></ul>
+  tactics:
+     - "{{initial_access.id}}"
+     - "{{credential_access.id}}"
+  references:
+      - "[[1] Blaze Labs. (2023, July 20). Tales of two security issues in cryptocurrency software wallets. Retrieved March 14, 2025.](https://www.blazeinfosec.com/post/vulnerabilities-crypto-wallets/)"
+      - "[[2] California Department of Financial Protection & Innovation. (2025). Crypto Scam Tracker. Retrieved March 20, 2025.](https://dfpi.ca.gov/consumers/crypto/crypto-scam-tracker/)"
+      - "[[3] Kaspersky. (2024). Kaspersky discovers Lazarus APT exploited zero-day vulnerability in Chrome to steal cryptocurrency. Retrieved March 11, 2025.](https://www.kaspersky.com/about/press-releases/lazarus-apt-exploited-zero-day-vulnerability-in-chrome-to-steal-cryptocurrency)"
+      - "[[4] Shamban, S. (2025). The Bybit Hack: A crypto heist with cloud security lessons. Retrieved March 11, 2025.](https://www.scworld.com/perspective/the-bybit-hack-a-crypto-heist-with-cloud-security-lessons)"
+      - "[[5] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &exploit_gasfree_rpcs
+  id: ADT3009
+  name: Exploit Gas-Free RPCs
+  object-type: technique
+  description: |
+     An adversary may abuse gas-free RPCs to gain unauthorized access to additional resources.<br><br>Digital asset systems often offer special-purpose Remote Procedure Calls (RPCs) that bypass standard transaction fees (gas). These gas-free RPCs are intended for specific functionalities like system monitoring, administrative tasks, or developer tools. However, their privileged access and fee exemption can be exploited by adversaries for malicious purposes.<br><br>Adversaries abuse gas-free RPCs by:<br><ul><li>Identifying vulnerable RPCs: Adversaries can scan for and analyze available RPC endpoints, searching for those lacking proper access controls or insufficient rate limiting.</li><li>Social engineering: Tricking authorized users into granting access to gas-free RPCs or revealing sensitive information about their use.</li></ul><br>Adversaries can utilize gas-free RPCs for:<br><ul><li>Lateral Movement: By chaining together gas-free RPC calls, attackers can navigate through the system, accessing internal resources, contracts, or user accounts beyond their initial entry point.</li><li>Privilege escalation: Exploiting vulnerabilities in gas-free RPCs themselves or leveraging them to gain access to higher-level privileges within the system.</li><li>Contract Manipulation: Exploiting gas-free RPCs with write access allows attackers to tamper with smart contract logic or configurations, potentially diverting funds or disrupting operations.</li><li>Resource Exhaustion: Abusing gas-free RPCs can flood the system with requests, overwhelming resources and potentially causing denial-of-service attacks.</li></ul>
+  tactics:
+     - "{{lateral_movement.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+      - "[[2] Behnke, Rob. (2022, March 30). Explained: The Ronin Hack (March 2022). Retrieved March 17, 2025.](https://www.halborn.com/blog/post/explained-the-ronin-hack-march-2022)"
+      - "[[3] Merkle Science. (2022, March 31). Hack Track: Analysis of Ronin Network Exploit. Retrieved March 1, 2025.](https://www.merklescience.com/blog/hack-track-analysis-of-ronin-network-exploit)"
+      - "[[4] Belenkov, N., Callens, V., Murashkin, A., Bak, K., Derka, M., Gorzny, J., & Lee, S.-S. (2023, December 19). SoK: A Review of Cross-Chain Bridge Hacks in 2023.](https://arxiv.org/html/2501.03423v1)"
+
+- &exploit_obsolete_device
+  id: ADT3010
+  name: Exploit Obsolete Device
+  object-type: technique
+  description: |
+     An adversary may leverage unpatched vulnerabilities in an obsolete device to steal value-form from digital asset wallets or inflict reputational damage.<br><br>An outdated device might miss crucial security updates or protections, leaving it vulnerable to even less experienced attackers. Adversaries may attempt to exploit digital wallets on such devices, like phones or hardware wallets, because they are easier targets.<br><br>These devices often lack robust defenses and mitigating countermeasures, making them vulnerable to various methods of compromise:<br><ul><li>Exploiting outdated software: Unpatched vulnerabilities in outdated operating systems or wallet software create entry points for malware injection, data breaches, and unauthorized access.</li><li>Weak Encryption: Obsolete devices might use outdated encryption methods, making it easier for attackers to decrypt and access stored data.</li><li>Network Exploits: If an outdated device connects to unsecured networks, attackers can intercept data transmissions, gaining access to wallet information.</li><li>Manipulating device status checks: Attackers might trick security mechanisms into believing the device is updated and secure, bypassing safeguards and accessing stored assets.</li><li>Offline vulnerability exploitation: Outdated devices with offline payment capabilities might be targeted to transfer stored value to attacker-controlled accounts.</li></ul><br>Compromising an obsolete or outdated device can allow the adversary to:<br><ul><li>Inflict reputational damage: Successful attacks on outdated devices can damage reputations by eroding trust in payment solutions. This creates perception of vulnerability that might weaken a user’s confidence in the digital asset system or financial institution.</li><li>Steal value-form: By leveraging one or more of the various attack methods on an outdated device, attackers can gain access to and deplete digital asset wallets.</li><li>Exploit other device components: Compromising the obsolete device may allow the attacker to compromise other aspects of the payment infrastructure.</li></ul>
+  tactics:
+     - "{{initial_access.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 1: A handbook for offline payments with CBDC.](https://www.bis.org/publ/othp64.pdf)"
+
+- &exploit_smart_contract_hierarchical_ownership
+  id: ADT3011
+  name: Exploit Smart Contract Hierarchical Ownership
+  object-type: technique
+  description: |
+     An adversary can exploit vulnerabilities in the hierarchical ownership structure of a smart contract, allowing them to gain unauthorized control or privileges within the contract.<br><br>An adversary can exploit a system by identifying and manipulating hierarchical ownership and access rights between interconnected smart contract components. Typically, this involves pinpointing high-privilege entities that manage critical functions or resources. The attacker may then compute or brute-force identifiers for privileged functions and use these to initiate unauthorized transactions or commands. By leveraging the hierarchical relationship between components, the adversary can escalate their privileges, often by setting their own credentials in place of legitimate ones. This grants them control over sensitive operations or resources, which they can then exfiltrate or manipulate to their advantage. Such exploitation underscores the importance of robust access control and vigilant management of hierarchical permissions within any system.
+  tactics:
+     - "{{privilege_escalation.id}}"
+  references:
+      - "[[1] Ghaleb, A., Rubin, J., & Pattabiraman, K. (2023). AChecker: Statically Detecting Smart Contract Access Control Vulnerabilities. 2023 IEEE/ACM 45th International Conference on Software Engineering (ICSE), 945–956.](https://doi.org/10.1109/icse48619.2023.00087)"
+      - "[[2] Immunefi. (2023, July 19). The Top 10 Most Common Vulnerabilities In Web3. Retrieved March 17, 2025.](https://immunefi.com/blog/all/top-10-web3-vulnerabilities/)"
+      - "[[3] Iuliano, G., & Di Nucci, D. (2024). Smart Contract Vulnerabilities, Tools, and Benchmarks: an Updated Systematic Literature Review.](https://arxiv.org/pdf/2412.01719)"
+      - "[[4] Jain, Rhythm. (2025, February 12). OWASP SC Top 10 (2025) Breakdown: The Most Critical Smart Contract Risks of 2025. Retrieved March 17, 2025.](https://www.resonance.security/blog-posts/owasp-sc-top-10-2025-breakdown-the-most-critical-smart-contract-risks-of-2025)"
+
+- &exploit_smart_contract_implementation
+  id: ADT3012
+  name: Exploit Smart Contract Implementation
+  object-type: technique
+  description: |
+     An adversary can exploit vulnerabilities in smart contract implementations within a digital asset system to manipulate transactions, steal funds, or compromise the system's integrity.<br><br>As blockchain technology evolves and new applications are built on top of it, the combination of inherent blockchain vulnerabilities and the limitations of these applications creates an expanded attack surface for adversaries. Smart contracts, a hallmark of Blockchain 2.0, are particularly susceptible to exploitation due to deficiencies in their programming languages, execution environments, and coding practices. <br><br>Beyond coding flaws, risks at the execution layer—where transactions and smart contracts are processed—pose additional threats, such as privacy breaches, transaction errors, and the exposure of sensitive data. These risks undermine the reliability and security of distributed ledger technology (DLT) and compromise the financial integrity of digital asset systems.
+  tactics:
+     - "{{execution.id}}"
+  references:
+      - "[[1] Baninemeh, E., Jansen, S., Labunets, K., & Slikker, M. (2024, November 7). A Security Risk Assessment Method for Distributed Ledger Technology (DLT) based Applications: Three Industry Case Studies.](https://arxiv.org/pdf/2401.12358)"
+      - "[[2] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+      - "[[3] Hyperledger. (2021, November 18). Hyperledger Fabric Security Threats: What to Look For. Retrieved March 11, 2025.](https://www.lfdecentralizedtrust.org/blog/2021/11/18/hyperledger-fabric-security-threats-what-to-look-for)"
+      - "[[4] Iuliano, G., & Di Nucci, D. (2024, December). Smart Contract Vulnerabilities, Tools, and Benchmarks: an Updated Systematic Literature Review.](https://arxiv.org/pdf/2412.01719)"
+      - "[[5] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &contract_ownership_changes
+  id: ADT3012.001
+  name: Contract Ownership Changes
+  object-type: technique
+  description: |
+     An adversary may exploit insufficient or improperly implemented access control measures to gain unauthorized ownership of a smart contract and execute malicious functions.<br><br>Exploiting contract ownership changes is a type of privilege escalation attack that targets smart contracts on a blockchain network. An attacker can exploit vulnerabilities in the smart contract functions to gain unauthorized access and control over a contract's operations. Once the adversary obtains ownership they can make illegitimate alterations to the contract, bypass access levels, and execute malicious functions without the original owner's knowledge or permission.<br><br>The adversary is typically able to complete these steps due to a lack of adequate protections implemented in the smart contract functions. As a result, any participant (in particular a malicious entity) may be able to make external calls to restricted functions. Examples of this include ownership hijacking, where an attacker is able to call the smart contract initialization function multiple times to become the new owner; and token manipulation, where an attacker uses a public burn function to manipulate token supply, affecting currency value and liquidity.
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] ImmuneBytes. (2023, September 12). Access Control Vulnerabilities in Solidity Smart Contracts. Retrieved March 6, 2025.](https://immunebytes.com/blog/access-control-vulnerabilities-in-solidity-smart-contracts/)"
+      - "[[2] Kulkarni, Y. (2022, February 25). Ownership Exploit in Solidity Smart Contracts. Retrieved March 6, 2025.](https://blog.finxter.com/smart-contract-security-series-part-1-ownership-exploit/)"
+      - "[[3] OSWAR - Open Standard Web3 Reference. (2025a). Contract Ownership Changes. Retrieved March 6, 2025.](https://www.oswar.org/attack/63)"
+      - "[[4] OSWAR - Open Standard Web3 Reference. (2025b). Smart Contract Ownership Override. Retrieved March 6, 2025.](https://www.oswar.org/attack/73)"
+
+- &evil_contract
+  id: ADT3012.002
+  name: Evil Contract
+  object-type: technique
+  description: |
+     An adversary may develop and deploy a malicious smart contract designed to exploit blockchain vulnerabilities and execute unauthorized or deceptive functions.<br><br>For a blockchain system with inadequate protections or checks, it could be possible for an adversary to deploy code onto the platform which contains harmful functions or vulnerabilities. By exploiting design weaknesses in the blockchain or decentralized applications, the malicious contract may be able to perform unauthorized actions or cause unintended consequences.<br><br>Once deployed, if the malicious contract persists on the blockchain, an adversary may be able to maintain control over infected decentralized applications and continually carry out illicit transactions which extract funds from honest participants. A further consequence may be the possibility of an attacker being able to inject arbitrary malicious code into other contracts or applications and execute other malicious behaviors. Examples of this include:<br><ul><li>Scams and phishing attacks: An attacker deploys a malicious smart contract and uses phishing to trick users into signing the contract and unintentionally authorizing the transfer of funds to the attacker’s address.</li><li>Flash loan attacks: The adversary deploys malicious smart contracts that enable them to borrow and manipulate large amounts of cryptocurrency within a single transaction, exploiting vulnerabilities in underlying blockchain technologies.</li></ul>
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] Chong, D. (2022, March). $1.7m stolen from simple email phishing: 3 essential security takeaways from the OpenSea attack. Retrieved March 24, 2025.](https://blog.harpie.io/1-7m-stolen-from-simple-email-phishing-3-essential-takeaways-from-the-opensea-attack-9d6fa7dbd363)"
+      - "[[2] CryptoShine. (2021, March 6). PAID Network contract hack — deep dive. Retrieved March 24, 2025.](https://cryptoshine.medium.com/paid-contract-hack-deep-dive-4dd89e1414f5)"
+      - "[[3] OSWAR - Open Standard Web3 Reference. (2025). Malicious Smart Contracts. Retrieved March 24, 2025.](https://www.oswar.org/attack/64)"
+      - "[[4] Rivas, M., Santos, R., & Sanz, J. (2025, March 10). In-Depth Technical Analysis of the Bybit Hack. Retrieved March 24, 2025.](https://www.nccgroup.com/us/research-blog/in-depth-technical-analysis-of-the-bybit-hack/)"
+
+- &gas_griefing
+  id: ADT3012.003
+  name: Gas Griefing
+  object-type: technique
+  description: |
+     An adversary may manipulate how much gas is sent to a smart contract so that sub-calls and external communications for a given transaction cannot execute in order to induce unpredictable behavior and block future transactions from taking place.<br><br>Gas is a small unit of cryptocurrency which must be paid to complete a smart contract operation on a blockchain platform. End users pay a gas fee to compensate miners and validators for the computational resources needed to conduct blockchain transactions. The amount of gas a user must pay is proportional to the complexity of the computations they would like to execute.<br><br>An adversary looking to disrupt a blockchain system may deliberately pay enough gas to execute the main function call in a smart contract without providing enough for sub-calls or external communications to be executed. In the absence of adequate protections to verify that such sub-calls can be completed, this may result in uncontrolled behavior or block future transactions from taking place.
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] Muhs, D. (2020). SWC-126 - Smart Contract Weakness Classification (SWC). Retrieved March 6, 2025.](https://swcregistry.io/docs/SWC-126/)"
+      - "[[2] Olympix. (2022, December 27). Gas Griefing Attack. Retrieved March 6, 2025.](https://www.linkedin.com/pulse/gas-griefing-attack-olympix/?trk=pulse-article_more-articles_related-content-card)"
+      - "[[3] Orochi Network. (2024). Understanding Smart Contract Gas Griefing Attacks: Vulnerabilities, Impacts, and Preventive Measures. Retrieved March 6, 2025.](https://orochi.network/blog/Understanding-Smart-Contract-Gas-Griefing-Attacks)"
+      - "[[4] OSWAR - Open Standard Web3 Reference. (2025). Gas Griefing. Retrieved March 6, 2025.](https://www.oswar.org/attack/86)"
+      - "[[5] Oualid, Z. (2022, May 18). Smart contract gas griefing attack | The hidden danger. Retrieved March 6, 2025.](https://www.getsecureworld.com/blog/smart-contract-gas-griefing-attack-the-hidden-danger/)"
+
+- &oracle_manipulation
+  id: ADT3012.004
+  name: Oracle Manipulation
+  object-type: technique
+  description: |
+     An adversary may alter external data feeds to deceive smart contracts into executing unauthorized actions.<br><br>Oracles are crucial components that connect smart contracts to real-world external data such as price feeds, weather data, or sports scores. This allows for interoperability between different blockchain systems and provides necessary information for smart contract operations which execute based on input and output data from the real world. However, smart contract reliance on external sources makes them vulnerable to manipulation. Adversaries can exploit this vulnerability to deceive smart contracts, often for financial gain.<br><br>An adversary may manipulate oracles by:<br><ul><li>Compromising the oracle: Attackers may directly hack the oracle server, exploit software vulnerabilities, or bribe oracle operators to inject false data. </li><li>Tampering with data sources: By manipulating external sources like market feeds, sensors, or launching Sybil attacks against voting-based oracles, attackers can cause the oracle to deliver inaccurate information.</li></ul><br>An adversary benefits from oracle manipulation through:<br><ul><li>Unauthorized funds transfer: By feeding inflated price data, attackers can trigger the contract to release funds to them at an artificially high price.</li><li>Asset theft: Tampering with ownership data can give attackers control over assets held by the contract.</li><li>Market manipulation: Manipulated oracle data can lead to unfair liquidations or exchange rates.</li></ul>
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] Chainlink. (2024, January 12). What Is an Oracle in Blockchain? Retrieved March 18, 2025.](https://chain.link/education/blockchain-oracles)"
+      - "[[2] ImmuneBytes. (2023, August 5). What are Oracle Manipulation Attacks in Blockchain? Retrieved March 25, 2025.](https://immunebytes.com/blog/what-are-oracle-manipulation-attacks-in-blockchain/)"
+
+- &reentrancy
+  id: ADT3012.005
+  name: Reentrancy
+  object-type: technique
+  description: |
+     An adversary may exploit a reentrancy vulnerability in a smart contract to repeatedly call a function before the previous call has completed.<br><br>A reentrancy attack occurs when an adversary repeatedly calls the same function in a vulnerable smart contract, draining the funds of its owner. The problem typically arises when a smart contract function communicates with another address before changing its state. <br><br>For example, a contract that responds to external function calls before updating its internal balances following a withdrawal will likely be susceptible to this kind of attack. An adversary in this situation could repeatedly attempt to withdraw funds and claim that it has not received them. Each call would trigger a fallback function which repeatedly extracts some amount of token from the victim contract owner as penalty. This behavior could create a loop that drains the victim’s funds without allowing the vulnerable smart contract to change its state according to the funds transacted in each withdrawal.
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] Fáwọlé, J. (2025, March 18). A Broad Overview of Reentrancy Attacks in Solidity Contracts. Retrieved March 25, 2025.](https://www.quicknode.com/guides/ethereum-development/smart-contracts/a-broad-overview-of-reentrancy-attacks-in-solidity-contracts)"
+      - "[[2] Oualid, Z. (n.d.). What is a Reentrancy Attack in Solidity? Retrieved March 25, 2025.](https://www.getsecureworld.com/blog/what-is-a-reentrancy-attack-in-solidity-technical-examples/)"
+      - "[[3] OWASP. (n.d.). Vulnerability: Reentrancy. Retrieved March 25, 2025.](https://owasp.org/www-project-smart-contract-top-10/2023/en/src/SC01-reentrancy-attacks.html)"
+      - "[[4] Polak, K. (2022, January 17). Hack Solidity: Reentrancy Attack. Retrieved March 25, 2025.](https://hackernoon.com/hack-solidity-reentrancy-attack)"
+
+- &signature_replay_attack
+  id: ADT3012.006
+  name: Signature Replay Attack
+  object-type: technique
+  description: |
+     An adversary may reuse another entity's digital signature obtained from one blockchain to carry out a transaction on another blockchain, causing the victim to incur financial losses without their knowledge or consent.<br><br>To execute a signature replay attack, the adversary will typically take advantage of weaknesses in smart contract design. One such vulnerability that is particularly prominent is the lack of a ‘nonce’ used in finalizing transactions. Using nonces in any signature scheme to uniquely identify transactions is necessary for security. Without this tag, an adversary can easily exploit a signature captured in a transaction on one blockchain and repeatedly use this information to conduct fraudulent transactions on another blockchain.<br><br>Similarly, failing to implement specific checks for different blockchain networks can also exacerbate the extent to which a digital asset system is susceptible to signature replay attacks.
+  subtechnique-of: "{{exploit_smart_contract_implementation.id}}"
+  references:
+      - "[[1] Chainlink. (2024). What Is a Replay Attack? Retrieved March 5, 2025.](https://chain.link/education-hub/replay-attack)"
+      - "[[2] Conflux Network. (2024). Signature Replay Attacks. Retrieved March 5, 2025.](https://doc.confluxnetwork.org/docs/general/build/smart-contracts/contract-security/signature-replay)"
+      - "[[3] ImmuneBytes. (2023, December 16). Replay Attack in Blockchain Networks and Nodes. Retrieved March 5, 2025.](https://immunebytes.com/blog/replay-attack-in-blockchain-networks-and-nodes/)"
+      - "[[4] infuy. (2023, March 6). Understanding Signature Replay in Solidity: A Comprehensive Guide. Retrieved March 5, 2025.](https://www.infuy.com/blog/understanding-signature-replay-in-solidity-a-comprehensive-guide/)"
+      - "[[5] Neptune Mutual. (2024, June 28). Understanding Signature Replay Attack. Retrieved March 5, 2025.](https://neptunemutual.com/blog/understanding-signature-replay-attack/)"
+
+- &faultinjection_attack
+  id: ADT3014
+  name: Fault-Injection Attack
+  object-type: technique
+  description: |
+     An adversary may place a device under external stress to deduce key values by comparing faulty program output against expected program behavior.<br><br>Fault-injection attacks target the physical vulnerabilities of devices, particularly those used for secure cryptographic operations. <br><br>Adversaries employ various methods to cause the hardware to exhibit erroneous behavior when programs are running, such as:<br><ul><li>Extreme temperatures: Exposing devices to intense heat or cold can disrupt internal workings and introduce errors.</li><li>Voltage manipulation: Fluctuating or excessive voltage can cause glitches and expose sensitive data.</li><li>Electromagnetic pulses: High-powered bursts of electromagnetic radiation can overload circuits and induce errors.</li></ul><br>By analyzing the device's response to these stresses, attackers can potentially exploit the errors to:<br><ul><li>Reconstruct encryption keys: Analyze variations in encrypted data to deduce the key used.</li><li>Bypass security mechanisms: Exploit faulty responses to gain unauthorized access.</li></ul>
+  tactics:
+     - "{{execution.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 1: A handbook for offline payments with CBDC.](https://www.bis.org/publ/othp64.pdf)"
+      - "[[2] Bharath, A., Paduraru, A., & Gaidosch, T. (2024). Cyber Resilience of the Central Bank Digital Currency Ecosystem ” IMF Fintech Note 2024/003. International Monetary Fund.](https://www.imf.org/-/media/Files/Publications/FTN063/2024/English/FTNEA2024003.ashx)"
+      - "[[3] Breier, J., & Hou, X. (2022). How Practical Are Fault Injection Attacks, Really? IEEE Access, 10, 113122–113130.](https://doi.org/10.1109/access.2022.3217212)"
+      - "[[4] Chiu, T., & Xiong, W. (2023). SoK: Fault Injection Attacks on Cryptosystems. Proceedings of the 12th International Workshop on Hardware and Architectural Support for Security and Privacy, 64–72.](https://doi.org/10.1145/3623652.3623671)"
+
+- &flash_loan
+  id: ADT3015
+  name: Flash Loan
+  object-type: technique
+  description: |
+     An adversary may borrow a large amount of digital assets without any collateral to manipulate the value of another digital asset.<br><br>Attackers can leverage flash loans, a feature in some DeFi protocols allowing uncollateralized borrowing of large asset amounts, to manipulate the price of specific digital assets. Flash loans are a DeFi mechanism that adversaries can exploit to manipulate markets, exploit vulnerabilities in smart contracts, or steal funds—all without providing collateral. These loans allow users to borrow large amounts of cryptocurrency, provided they repay the loan within the same transaction block. Attackers typically borrow funds, use them to manipulate prices or exploit a protocol, and repay the loan while keeping illicit profits. The speed and non-collateralized nature of flash loans make them challenging to detect or prevent.<br><br>Adversaries often use flash loans to exploit price discrepancies across decentralized exchanges or to manipulate the value of cryptocurrencies. By leveraging temporary liquidity, attackers can distort markets, destabilize protocols, or siphon funds, all while obscuring the origins of their transactions. Flash loans are particularly dangerous when used to exploit vulnerabilities in DeFi platforms, allowing attackers to execute sophisticated schemes that evade compliance measures and disrupt financial ecosystems.
+  tactics:
+     - "{{resource_development.id}}"
+  references:
+      - "[[1] Alhaidari, A., Palanisamy, B., & Krishnamurthy, P. (2024). Poster: FlashGuard: Real-time Disruption of Non-Price Flash Loan Attacks in DeFi. Proceedings of the 2024 on ACM SIGSAC Conference on Computer and Communications Security, 5039–5041.](https://doi.org/10.1145/3658644.3691385)"
+      - "[[2] Kong, Q., Chen, J., Wang, Y., Jiang, Z., & Zheng, Z. (2023). DeFiTainter: Detecting Price Manipulation Vulnerabilities in DeFi Protocols.](https://doi.org/10.1145/3597926.3598124)"
+      - "[[3] Palamarchuk, R. (2023, April 28). Flash Loan Attacks: Risks & Prevention. Retrieved March 11, 2025.](https://hacken.io/discover/flash-loan-attacks/)"
+      - "[[4] Chainalysis. (2023, March 15). Euler Finance Flash Loan Attack Explained. Retrieved March 24, 2025.](https://www.chainalysis.com/blog/euler-finance-flash-loan-attack/)"
+      - "[[5] Wu, K. W. (2024, November 2). Strengthening DeFi Security: A Static Analysis Approach to Flash Loan Vulnerabilities. Retrieved March 24, 2025.](https://arxiv.org/html/2411.01230v1)"
+
+- &generate_counterfeit_tokens
+  id: ADT3016
+  name: Generate Counterfeit Tokens
+  object-type: technique
+  description: |
+     An adversary may generate counterfeit tokens to cause financial and reputational damage to the token-based digital asset system.<br><br>The imitation tokens resemble their legitimate counterpart but lack official backing and therefore provide no real value. <br><br>Adversaries can generate counterfeit tokens by:<br><ul><li>Exploiting system vulnerabilities: Targeting weaknesses in the system's security or token smart contracts to manipulate protocols or inject code for token creation.</li><li>Sophisticated hacking techniques: Employing advanced hacking methods like social engineering or zero-day exploits to gain unauthorized access and mint fake tokens.</li></ul><br>Adversaries utilize counterfeit value-form for:<br><ul><li>Financial gain: Selling counterfeit tokens to unsuspecting buyers for personal profit.</li><li>Market manipulation: Artificially inflating or deflating token prices to harm other users and potentially benefit from short-selling schemes.</li><li>Reputation damage: Flooding the market with fake tokens to devalue the legitimate ones and erode trust in the system.</li></ul>
+  tactics:
+     - "{{fraud.id}}"
+  references:
+      - "[[1] Gao, B., Wang, H., Xia, P., Wu, S., Zhou, Y., Luo, X., & Tyson, G. (2020, November 30). Tracking Counterfeit Cryptocurrency End-to-end. Proceedings of the ACM on Measurement and Analysis of Computing Systems, 4(3), 1–28.](https://doi.org/10.1145/3428335)"
+      - "[[2] Academic Labs. (2024, January 5). Official Fraud Alert: Immediate Attention Required Regarding Counterfeit $AAX Tokens. Retrieved March 11, 2025.](https://medium.com/@academic-labs/official-fraud-alert-immediate-attention-required-regarding-counterfeit-aax-tokens-4994c18f8ffa)"
+      - "[[3] Fairfield, J. (2024). Crypto-Counterfeiting. William & Mary Business Law Review, 15(3), 497–551.](https://scholarship.law.wm.edu/cgi/viewcontent.cgi?article=1274&context=wmblr)"
+
+- &cryptographic_protocol_analysis
+  id: ADT3016.001
+  name: Cryptographic Protocol Analysis
+  object-type: technique
+  description: |
+     An adversary can capture cryptographic keys during the transfer of a digital asset value-form between purses to reverse engineer them.<br><br>During payment transactions, value is transferred between digital wallets or purses, and this process is safeguarded by cryptographic protections. If an attacker manages to recover and reverse-engineer the cryptographic keys used in these transfers, they could potentially create fraudulent messages and counterfeit value. Although such attacks are less prevalent today due to robust value transfer protocols, advancements in cryptanalysis continue to pose a risk. For instance, if an adversary successfully breaks the encryption algorithm protecting the keys, they could manipulate the transaction data to their advantage.
+  subtechnique-of: "{{generate_counterfeit_tokens.id}}"
+  references:
+      - "[[1] Groco Family Office Advisors. (2024, March 8). Security Analysis of Cryptocurrency Protocols and Exchanges - Family Office Advisors. Retrieved March 24, 2025.](https://groco.com/article/cryptocurrency-protocols-security/)"
+      - "[[2] Hosseini, H., & Hedayati, A. (2021). A Survey on Blockchain: Challenges, Attacks, Security, and Privacy. International Journal of Smart Electrical Engineering, 10(3).](https://doi.org/10.30495/ijsee.2021.684027)"
+      - "[[3] Netizen. (2024, June 10). Blockchain Security: The Power of Cryptographic Algorithms. Retrieved March 24, 2025.](https://www.netizen.net/news/post/4397/blockchain-security-the-power-of-cryptographic-algorithms)"
+      - "[[4] PACE Anti-Piracy. (2023, June 23). Avoiding the dangers of in-app cryptography. Retrieved March 24, 2025.](https://paceap.com/avoiding-the-dangers-of-in-app-cryptography/)"
+      - "[[5] The OWASP® Foundation. (n.d.). Cryptanalysis Software Attack. Retrieved March 24, 2025.](https://owasp.org/www-community/attacks/Cryptanalysis)"
+
+- &physical_breach
+  id: ADT3016.002
+  name: Physical Breach
+  object-type: technique
+  description: |
+     An adversary may seize control of user devices used to store offline digital value-form and use invasive physical attacks (e.g. micro-probing, chip modification) to clone or manipulate this value-form.<br><br>Offline digital asset value may generally be stored in a digital wallet on a user device such as a smartcard or mobile phone. A threat actor may attempt to duplicate or tamper with this hardware representation using intrusive attacks which physically modify the device. They may also try to manipulate how offline digital asset value can be transferred. For example, these threat actors might try to read or alter the data on the device through a process known as micro-probing. This involves the use of a tiny probe to physically interact with the device's internal components, allowing the attacker to access and potentially manipulate the data stored within. Because the user's device may be in the possession of the attacker, this could potentially give the attacker an unlimited amount of time to carry out their attack without being detected. This lack of time constraints significantly increases the risk of successful data manipulation or theft, making it a serious concern in designing offline payment systems.
+  subtechnique-of: "{{generate_counterfeit_tokens.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 1: A handbook for offline payments with CBDC.](https://www.bis.org/publ/othp64.pdf)"
+      - "[[2] Kamali, H. M., Azar, K. Z., Farahmandi, F., & Tehranipoor, M. (2022). Advances in Logic Locking: Past, Present, and Prospects.](https://eprint.iacr.org/2022/260.pdf)"
+      - "[[3] Wang, H., Forte, D., Tehranipoor, M. M., & Shi, Q. (2017). Probing Attacks on Integrated Circuits: Challenges and Research Opportunities. IEEE Design & Test, 34(5), 63–71.](https://doi.org/10.1109/mdat.2017.2729398)"
+
+- &induce_legal_and_regulatory_penalties
+  id: ADT3019
+  name: Induce Legal and Regulatory Penalties
+  object-type: technique
+  description: |
+     An adversary may exploit vulnerabilities to induce legal and regulatory violations for the digital asset system or organization.<br><br>Depending on the adversary’s target and capabilities, legal and regulatory penalties could be a result of, but not limited to:<br><ul><li>Manipulating financial transactions: Exploiting vulnerabilities in trading platforms or wallets to manipulate transactions, creating artificial price movements, or conducting unauthorized trades. This could violate market manipulation regulations and lead to hefty fines or even criminal charges.</li><li>Breaching data privacy regulations: Compromising user data or internal systems could violate data privacy regulations like GDPR, CCPA, or FTC, resulting in significant fines and reputational damage.</li><li>Laundering illegal funds: Exploiting vulnerabilities in Know Your Customer (KYC) and Anti-Money Laundering (AML) protocols to anonymize or launder illegal funds through the digital asset system. This could incur substantial legal repercussions and sanctions.</li><li>Disrupting financial stability: Triggering large-scale system outages or manipulations that impact the stability of the broader financial system could be subject to severe regulatory sanctions and potential criminal investigations.</li></ul><br>As a result of legal and regulatory penalties, organizations may experience:<br><ul><li>Financial penalties: Fines imposed by regulatory bodies can be significant, potentially crippling the organization financially.</li><li>Reputational damage: Public exposure of regulatory violations can severely damage the organization's reputation and erode customer trust.</li><li>Operational disruption: Regulatory investigations and remediation efforts can disrupt daily business operations.</li><li>Criminal charges: In severe cases, individuals within the organization may face criminal charges for negligence or deliberate involvement in illegal activities.</li></ul>
+  tactics:
+     - "{{impact.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Central bank digital currency (CBDC) information security and operational risks to central banks.](https://www.bis.org/publ/othp81.pdf)"
+      - "[[2] Meuse, J. (2023, March 15). The Double-Edged Promise of Cryptocurrency: How Innovation Creates New Vulnerabilities and How Government Oversight Can Reduce Crypto Crime. Retrieved March 17, 2025.](https://sjipl.mainelaw.maine.edu/2023/03/15/the-double-edged-promise-of-cryptocurrency-how-innovation-creates-new-vulnerabilities-and-how-government-oversight-can-reduce-crypto-crime/)"
+      - "[[3] Office of Public Affairs. (2023, December 6). Founder and Majority Owner of Cryptocurrency Exchange Pleads Guilty to Unlicensed Money Transmitting. Retrieved March 17, 2025.](https://www.justice.gov/opa/pr/founder-and-majority-owner-cryptocurrency-exchange-pleads-guilty-unlicensed-money)"
+
+- &insiderassisted_access
+  id: ADT3017
+  name: Insider-Assisted Access
+  object-type: technique
+  description: |
+     An adversary may exploit an insider to gain unauthorized access to the digital asset system.<br><br>Many digital asset systems, by nature, require trusted individuals with access to sensitive information and critical infrastructure. Adversaries seeking to compromise such systems often target insiders as a vulnerable entry point.<br><br>Adversaries may utilize insiders to:<br><ul><li>Reveal credentials or access codes: Persuading, coercing, or bribing insiders to share login information, encryption keys, or other sensitive access details.</li><li>Install malware: Tricking insiders into installing malicious software that grants attacker access or facilitates further compromises.</li><li>Exploit knowledge: Utilizing the insider's understanding of system vulnerabilities or security protocols to bypass them.</li></ul>
+  tactics:
+     - "{{initial_access.id}}"
+     - "{{lateral_movement.id}}"
+  references:
+      - "[[1] Ajayi, O., & Tarek Saadawi. (2021). Detecting Insider Attacks in Blockchain Networks. 2021 International Symposium on Networks, Computers and Communications (ISNCC).](https://doi.org/10.1109/isncc52172.2021.9615799)"
+      - "[[2] Behnke, R. (2021). The Risk of Insider Threats in Cryptocurrency. Retrieved March 11, 2025.](https://www.halborn.com/blog/post/the-risk-of-insider-threats-in-cryptocurrency)"
+      - "[[3] Cointelegraph, & Crystal Blockchain. (n.d.). Report on Crypto Exchange Hacks. Retrieved March 20, 2025.](https://cointelegraph.com/magazine/crypto-exchange-hacks/)"
+      - "[[4] Darktrace. (n.d.). What is crypto cybersecurity? Retrieved March 14, 2025.](https://darktrace.com/cyber-ai-glossary/crypto-cybersecurity)"
+      - "[[5] Gokhan Kul, & Upadhyaya, S. (2015). A Preliminary Cyber Ontology for Insider Threats in the Financial Sector. MIST ’15: Proceedings of the 7th ACM CCS International Workshop on Managing Insider Security Threats, 75–78.](https://doi.org/10.1145/2808783.2808793)"
+
+- &intercept_api_communication
+  id: ADT3018
+  name: Intercept API Communication
+  object-type: technique
+  description: |
+     An adversary may intercept API communication to steal sensitive data.<br><br>Digital asset systems rely heavily on Application Programming Interfaces (APIs) to interact with users, external services, and internal components. These interactions often involve sensitive data such as user credentials, transaction details, and system configurations. Intercepting and analyzing these API calls and responses can give adversaries lots of information of interest.<br><br>Adversaries can intercept API communication through:<br><ul><li>Man-in-the-middle attacks: Intercepting network traffic between users and the API server to capture data in transit.</li><li>Exploiting API vulnerabilities: Leveraging weaknesses in API design or implementation to gain unauthorized access.</li><li>Malware or insiders: Installing malicious software on user devices or compromising internal systems to monitor API traffic.</li></ul><br>Adversaries may gain the following types of information from intercepted API data:<br><ul><li>User credentials: Stolen login information or API keys can be used for unauthorized access and account takeover.</li><li>Transaction details: Intercepting payment information or financial data enables fraudulent transactions and money laundering.</li><li>System configurations: Understanding internal API calls can reveal vulnerabilities and aid in crafting targeted attacks.</li></ul><br>Some techniques from ATT&CK that could be utilized to facilitate intercepting API communication include:<br><ul><li>https://attack.mitre.org/techniques/T1557/ </li><li>https://attack.mitre.org/techniques/T1040/</li></ul>
+  tactics:
+     - "{{collection.id}}"
+  references:
+      - "[[1] Crypto.news. (2024, May 27). Review of 5 recent API hacks in crypto: decentralization's weak point. Retrieved March 26, 2025.](https://crypto.news/review-of-5-recent-api-hacks-in-crypto-decentralizations-weak-point/)"
+      - "[[2] Twist, J. (2025, March 5). The Ultimate Guide to MITM Attack Prevention for API Security. Retrieved March 26, 2025.](https://zuplo.com/blog/2025/03/05/mitm-attack-prevention-guide)"
+
+- &manipulate_transaction_history
+  id: ADT3020
+  name: Manipulate Transaction History
+  object-type: technique
+  description: |
+     Adversaries may manipulate the transaction history to deceive victims into transferring funds to malicious users.<br><br>The transaction history consists of a complete record of all previous transactions and their statuses, enabling users to identify any issues with the transaction or wallet balance. Users are able to determine the legitimacy of other wallets and users themselves by reviewing the transaction history, thus gaining confidence in performing new transactions. <br><br>An adversary can take advantage of this reliance on the transaction history by altering one or multiple transactions in the victim’s records. This technique encompasses various methods aimed at exploiting the victim’s perception of past transactions or utilizing visual similarities to known addresses, most often resulting in financial losses for the victim.
+  tactics:
+     - "{{fraud.id}}"
+  references:
+      - "[[1] Michaels, K. (2024). Seeing strange or unexpected transactions in your wallet. Retrieved March 18, 2025.](https://help.myetherwallet.com/en/articles/6873983-seeing-strange-or-unexpected-transactions-in-your-wallet)"
+      - "[[2] Nessi, L. (2025, January 30). How Fake Transaction Simulators Can Put Your Funds at Risk. Retrieved March 18, 2025.](https://www.ccn.com/education/crypto/fake-transaction-simulators-spoofing-risks-explained/)"
+
+- &address_poisoning
+  id: ADT3020.001
+  name: Address Poisoning
+  object-type: technique
+  description: |
+     An adversary may send small transactions from a spoofed address to insert lookalike addresses into the victim's transaction history.<br><br>Cryptocurrency addresses are long and complex strings of both numbers and letters, designed for security rather than usability. The complexity and length of the addresses makes it difficult to memorize or manually input them, often leading to users copying and pasting the addresses from past transactions for convenience. This creates an opportunity for address poisoning, where attackers send tiny transactions to the victim from a fake address resembling a legitimate one in the victim's transaction history. When the victim attempts to repeat a transaction by copying the address, they unintentionally copy the spoofed address and send funds to the attacker.<br><br>Adversaries are successful with address poisoning by taking advantage of:<br><ul><li>Mimicking legitimate addresses: Attackers use various techniques like typosquatting, character manipulation, or exploiting font similarity to create addresses that look almost identical to real ones.</li><li>Exploiting familiarity: Victims trust addresses they see in their history, increasing the chance they'll fall for the deception.</li><li>Abbreviated labels: Using shortened address labels can hide crucial details and make it easier for attackers to create convincing fakes.</li></ul>
+  subtechnique-of: "{{manipulate_transaction_history.id}}"
+  references:
+      - "[[1] Guan, S., & Li, K. (2024). Characterizing Ethereum Address Poisoning Attack. Proceedings of the 2024 on ACM SIGSAC Conference on Computer and Communications Security, 986–1000.](https://doi.org/10.1145/3658644.3690277)"
+      - "[[2] Lepcha, M. (2023, October 31). Address Poisoning (Crypto). Retrieved March 20, 2025.](https://www.techopedia.com/definition/address-poisoning-crypto)"
+      - "[[3] Tsuchiya, T., Dong, J.-D., Soska, K., & Christin, N. (2025, January 28). Blockchain Address Poisoning. Retrieved March 20, 2025.](https://arxiv.org/html/2501.16681v1)"
+
+- &zerovalue_transfer_phishing
+  id: ADT3020.002
+  name: Zero-Value Transfer Phishing
+  object-type: technique
+  description: |
+     An adversary may create zero-value transfers from vanity addresses to insert deceptive transactions into the victim's transaction history.<br><br>The length and complexity of addresses often leads to user’s only scanning the first and last few characters, and copy-pasting the address to initiate a new transaction. Adversaries exploit this common shortcut by creating “vanity addresses”, customized addresses including specific characters selected by the owner, to mimic legitimate addresses in the victim’s transaction history.<br><br>Attackers then leverage smart contracts to create misleading "zero-value transfers" from the victim's address to the spoofed address. These seemingly harmless transfers aim to trick victims into accidentally sending funds to the attacker's address instead of the intended recipient.<br><br>Adversaries are successful with zero-value transfer phishing by taking advantage of:<br><ul><li>Fake zero-value transfers: Attackers use smart contracts to create transactions with a value of zero from the victim's address to their own.</li><li>Exploiting user habits: Many users rely on transaction history and quickly glance at the beginning and end of addresses. Attackers craft spoofed addresses that look similar to legitimate ones, hoping the victim will miss the difference.</li><li>Bypassing authentication: Zero-value transfers don't trigger standard wallet authentication, making the attack harder to detect.</li></ul>
+  subtechnique-of: "{{manipulate_transaction_history.id}}"
+  references:
+      - "[[1] Coinbase. (2023). Zero Transfer Phishing - Part 1 - Attack Analysis. Retrieved March 12, 2025.](https://www.coinbase.com/blog/zero-transfer-phishing-part-1-attack-analysis)"
+      - "[[2] Etherscan. (2023, February 23). Zero-Value Token Transfer Attack. Retrieved March 12, 2025.](https://info.etherscan.com/zero-value-token-transfer-attack/)"
+      - "[[3] BIG Investigations. (2023). Zero-Value Transfer Phishing Scam–What To Know? - Blockchain Intelligence Group. Retrieved March 11, 2025.](https://blockchaingroup.io/investigation-insights/zero-value-transfer-phishing-scam-what-to-know/)"
+      - "[[4] ImmuneBytes. (2023). Zero-Value Token Transfer Phishing Attack. Retrieved March 11, 2025.](https://immunebytes.com/blog/zero-value-token-transfer-phishing-attack/)"
+      - "[[5] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &market_manipulation
+  id: ADT3021
+  name: Market Manipulation
+  object-type: technique
+  description: |
+     An adversary may exploit vulnerabilities or manipulate transactions within a digital asset system to influence market prices.  <br><br>The goal of market manipulation is to artificially influence asset prices or market conditions to deceive or mislead market participants. This can involve inflating or deflating the price of a digital asset or creating false impressions of market demand or supply.<br><br>Market manipulation may result in artificially created volatility or otherwise disrupt the normal functioning of the market. This manipulation can be achieved through various methods, including Pump and Dump schemes, Whale Wall Spoofing, Wash Trading, and Stop Hunting.<br><br>While market manipulation attacks are unlikely to impact the price of a digital asset pegged to a fiat currency, due to centralized control and regulatory oversight, they could influence more traditional cryptocurrencies where these assets are traded by exploiting differences in liquidity, market sentiment, or regulatory environments across jurisdictions.<br><br>The primary motivation for adversaries to engage in market manipulation is financial gain. These activities can lead to significant financial losses for unsuspecting investors and undermine trust in financial markets.
+  tactics:
+     - "{{impact.id}}"
+  references:
+      - "[[1] Binance. (2021, October 18). What is Market Manipulation in Cryptocurrency? Retrieved March 25, 2025.](https://www.binance.com/en/blog/fiat/what-is-market-manipulation-in-cryptocurrency-421499824684902912)"
+      - "[[2] Deloitte. (2021). Market Manipulation in Digital Assets.](https://www2.deloitte.com/content/dam/Deloitte/global/Documents/Financial-Services/gx-design-market-manipulation-in-digital-assets-whitepaper-v2-1.pdf)"
+      - "[[3] Kumar, A. (2023). Preventing Manipulation in the Digital Assets Market - Why and How?](https://www.infosys.com/industries/financial-services/insights/documents/preventing-manipulation-digital-assets-market.pdf)"
+      - "[[4] Lee, J., & Schu, L. (2025). Market abuse in the crypto-assets market: same risks, same activities, and same regulatory outcomes? A Research Agenda for Financial Law and Regulation, 157–178.](https://doi.org/10.4337/9781803929996.00015)"
+
+- &pump_and_dump
+  id: ADT3021.001
+  name: Pump and Dump
+  object-type: technique
+  description: |
+     An adversary may artificially inflate an asset’s price to sell at a profit, causing the price to crash and leaving others with losses.<br><br>When an adversary buys a significant amount of a digital asset at a low price, they create an artificial demand, causing the price to rise. Once the price has increased significantly, the adversary sells their holdings, causing the price to crash. This technique is often used in conjunction with social media campaigns or false news reports to lure unsuspecting investors into buying the digital asset. The adversary benefits from the price increase and leaves other investors with devalued assets when the price crashes. <br><br>Pump-and-dump schemes are poorly suited to digital assets pegged to fiat currencies because their value is tied directly to the stability of the underlying currency, leaving little room for the extreme price volatility that adversaries rely on. Unlike traditional cryptocurrencies, which often operate in decentralized and less regulated markets characterized by high volatility, fiat-pegged digital assets maintain a predictable value anchored to the fiat currency they represent. This inherent stability makes it difficult for manipulators to artificially inflate prices or create speculative demand, as the asset's value is designed to remain consistent regardless of market sentiment or coordinated buying and selling efforts.
+  subtechnique-of: "{{market_manipulation.id}}"
+  references:
+      - "[[1] Binance. (2021, October 18). What is Market Manipulation in Cryptocurrency? Retrieved March 18, 2025.](https://www.binance.com/en/blog/fiat/what-is-market-manipulation-in-cryptocurrency-421499824684902912)"
+      - "[[2] Deloitte. (2021). Market Manipulation in Digital Assets.](https://www2.deloitte.com/content/dam/Deloitte/global/Documents/Financial-Services/gx-design-market-manipulation-in-digital-assets-whitepaper-v2-1.pdf)"
+      - "[[3] Lee, J., & Schu, L. (2025). Market abuse in the crypto-assets market: same risks, same activities, and same regulatory outcomes? A Research Agenda for Financial Law and Regulation, 157–178.](https://doi.org/10.4337/9781803929996.00015)"
+      -  "[[4] US Attorney's Office District of Massachusetts. (2024, October 9). Eighteen Individuals and Entities Charged in International Operation Targeting Widespread Fraud and Manipulation in the Cryptocurrency Markets.](https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread)"
+
+- &stop_hunting
+  id: ADT3021.002
+  name: Stop Hunting
+  object-type: technique
+  description: |
+     An adversary may intentionally manipulate an asset's price to trigger stop-loss orders, causing a cascade of automatic selling and allowing them to buy the asset at a lower price for profit.<br><br>Stop hunting occurs when an adversary deliberately drives the price of an asset to a level that triggers stop-loss orders set by other traders. A stop-loss order is a preset instruction to sell an asset if its price falls to a certain threshold, designed to limit losses in volatile markets. By targeting these thresholds, the adversary forces a wave of automatic selling, which can further push the price down. Once the price has dropped significantly, the adversary can take advantage of the situation by buying the asset at the lower price, profiting when the price rebounds after the forced sell-off.<br><br>This technique is particularly effective highly volatile markets, such as cryptocurrency trading, where price manipulation is easier to achieve.
+  subtechnique-of: "{{market_manipulation.id}}"
+  references:
+      - "[[1] Binance. (2021, October 18). What is Market Manipulation in Cryptocurrency? Retrieved March 18, 2025.](https://www.binance.com/en/blog/fiat/what-is-market-manipulation-in-cryptocurrency-421499824684902912)"
+      - "[[2] Lee, J., & Schu, L. (2025). Market abuse in the crypto-assets market: same risks, same activities, and same regulatory outcomes? A Research Agenda for Financial Law and Regulation, 157–178.](https://doi.org/10.4337/9781803929996.00015)"
+      - "[[3] Puckrin, Nic. (2023, March 29). Stop-Loss Hunting: How Crypto Whales are Making a Killing. Retrieved March 18, 2025.](https://coinbureau.com/analysis/stop-loss-hunting-crypto-whales/)"
+      - "[[4] Williams-Grut, O. (2017, June 22). Ethereum’s flash crash, explained. Retrieved March 18, 2025.](https://www.businessinsider.com/ethereum-flash-crash-explained-gdax-2017-6)"
+
+- &wash_trading
+  id: ADT3021.003
+  name: Wash Trading
+  object-type: technique
+  description: |
+     An adversary may rapidly buy and sell the same digital asset to create the illusion of market activity, misleading traders and manipulating the price of the digital asset for personal gain.<br><br>Wash trading occurs when an adversary simultaneously buys and sells the same asset to create the illusion of market activity. By executing these trades, the adversary artificially inflates trading volume, making the asset appear more popular than it actually is. This technique lures unsuspecting investors into believing there is genuine interest in the asset, encouraging them to buy or sell based on the perceived activity. The adversary can then sell or buy the digital asset at the manipulated price and profit at their expense. Wash trading can also be employed to stabilize a digital asset at a desired level, meet trade requirements or incentives, or to boost the credibility of lesser-known assets.<br><br>Wash trading is more common in less regulated markets, such as cryptocurrency exchanges, where oversight and enforcement mechanisms may be limited. In these environments, wash trading can distort market data, mislead traders, and undermine trust in the digital asset system. This technique can also be used as part of a broader manipulation strategy, such as preparing for a pump-and-dump scheme. By creating the illusion of activity and demand, the adversary can set the stage for further exploitation of unsuspecting users.
+  subtechnique-of: "{{market_manipulation.id}}"
+  references:
+      - "[[1] Binance. (2021, October 18). What is Market Manipulation in Cryptocurrency? Retrieved March 18, 2025.](https://www.binance.com/en/blog/fiat/what-is-market-manipulation-in-cryptocurrency-421499824684902912)"
+      - "[[2] Chainalysis Team. (2025, January 29). Market Manipulation: Suspected Wash Trading on Select Blockchains May Account for Up To $2.57 Billion in Trading Volume. Retrieved March 25, 2025.](https://www.chainalysis.com/blog/crypto-market-manipulation-wash-trading-pump-and-dump-2025/)"
+      - "[[3] Deloitte. (2021). Market Manipulation in Digital Assets.](https://www2.deloitte.com/content/dam/Deloitte/global/Documents/Financial-Services/gx-design-market-manipulation-in-digital-assets-whitepaper-v2-1.pdf)"
+      - "[[4] Hougan, M., Kim, H., & Lerner, M. (2019, May 24). Economic and Non-Economic Trading In Bitcoin: Exploring the Real Spot Market For The World's First Digital Commodity.](https://www.sec.gov/comments/sr-nysearca-2019-01/srnysearca201901-5574233-185408.pdf)"
+      - "[[5] United States Attorney's Office District of Massachusetts. (2024, October 9). Eighteen Individuals and Entities Charged in International Operation Targeting Widespread Fraud and Manipulation in the Cryptocurrency Markets. Retrieved March 18, 2025.](https://www.justice.gov/usao-ma/pr/eighteen-individuals-and-entities-charged-international-operation-targeting-widespread)"
+
+- &whale_wall_spoofing
+  id: ADT3021.004
+  name: Whale Wall Spoofing
+  object-type: technique
+  description: |
+     An adversary may place large, fake orders to create a false impression of market demand or supply in order to manipulate the price of the digital asset.<br><br>Whale wall spoofing occurs when an adversary places large buy or sell orders, known as “whale walls,” without any intention of executing them. These orders are designed to create the illusion of strong buying or selling pressure, influencing market sentiment and tricking other traders into reacting. The adversary can then exploit the resulting price movement for their benefit. <br><br>For example, an adversary might place a massive sell order to make it appear as though a significant price drop is imminent, causing panic among traders who rush to sell their holdings. Once the price falls due to this panic selling, the adversary cancels their sell order and buys the asset at the lower price, profiting from the artificially induced price movement.<br><br>By creating the appearance of overwhelming demand or supply, whale wall spoofing can cause significant price volatility and disrupt normal market behavior. It is particularly effective in less regulated and highly liquid markets, such as cryptocurrency trading, where large orders can have a significant impact on price movements. Whale wall spoofing is less effective with digital assets pegged to fiat currencies because their value is directly tied to the stability of the underlying fiat currency, leaving little room for the dramatic price swings that adversaries rely on to exploit market sentiment.
+  subtechnique-of: "{{market_manipulation.id}}"
+  references:
+      - "[[1] Binance. (2021, October 18). What is Market Manipulation in Cryptocurrency? Retrieved March 18, 2025.](https://www.binance.com/en/blog/fiat/what-is-market-manipulation-in-cryptocurrency-421499824684902912)"
+      - "[[2] Nic Puckrin. (2023, March 29). Cryptocurrency Spoofing: How Bitcoin Whales Fool Markets. Retrieved March 18, 2025.](https://coinbureau.com/analysis/cryptocurrency-spoofing/)"
+
+- &partial_payments_attack
+  id: ADT3022
+  name: Partial Payments Attack
+  object-type: technique
+  description: |
+     An adversary may exploit the partial payments feature on the XRP ledger platform to deceive the receiving party about the actual amount delivered.<br><br>For systems operating on XRP Ledger, the "Partial Payment" flag allows a sender to deliver less than the specified amount field in a payment transaction. The partial payments feature can be utilized for various purposes, including but not limited to paying back loans. This feature may also be used in other financial transactions where installment-based or gradual settlement is preferable. Partial payments can be exploited if financial institutions or merchants assume the amount field always represents the full amount delivered. An adversary may send a payment with a large amount specified and enable the partial payment flag, resulting in a valid transaction that only delivers a small amount of money. If the merchant or recipient credits the full amount without verifying what was actually delivered, this could result in financial losses.
+  tactics:
+     - "{{fraud.id}}"
+  references:
+      - "[[1] Dioquino, V. (2024, January 16). Bitfinex prevents $15 billion exploit, reveals XRP Ledger vulnerability. Retrieved March 24, 2025.](https://cryptobriefing.com/bitfinex-15-billion-exploit-xrp-ledger-vulnerability/)"
+      - "[[2] XRP Ledger. (2024, November 4). Partial Payments. Retrieved March 24, 2025.](https://xrpl.org/docs/concepts/payment-types/partial-payments)"
+
+- &quantum_efficient_factorization
+  id: ADT3023
+  name: Quantum Efficient Factorization
+  object-type: technique
+  description: |
+     An adversary may utilize quantum efficient factorization algorithms to circumvent obsolete encryption implementations. <br><br>This technique exploits the vulnerability of traditional public-key cryptosystems like RSA and Diffie-Hellman based on integer factorization. While these systems were once considered virtually unbreakable due to the infeasibility of efficiently factoring a product of large prime numbers, the emergence of factorization algorithms utilizing quantum computing, poses a significant future threat. These algorithms, when implemented on sufficiently powerful quantum computers, could potentially factorize large numbers much faster than traditional methods, allowing attackers to decrypt messages, steal sensitive data, and disrupt secure communications. While quantum computing is still in its early stages, the development of these algorithms necessitates the adoption of post-quantum cryptography (PQC) to ensure long-term security in the digital age.
+  tactics:
+     - "{{execution.id}}"
+  references:
+      - "[[1] Coinbase. (2025). Is quantum computing a threat for crypto? Retrieved March 24, 2025.](https://www.coinbase.com/learn/crypto-basics/is-quantum-computing-a-threat-for-crypto)"
+      - "[[2] Kaur, G. (2024, February 15). An overview of post-quantum threats to proof-of-work cryptocurrencies. Retrieved March 24, 2025.](https://cointelegraph.com/learn/post-quantum-threats-to-proof-of-work-cryptocurrencies)"
+      - "[[3] Nili, C., Patterson, T., & Dukatz, C. (2024, May 21). Safeguard CBDC systems in the post-quantum computing age. Retrieved March 24, 2025.](https://www.weforum.org/stories/2024/05/safeguarding-central-bank-digital-currency-systems-post-quantum-age/)"
+      - "[[4] Szego, D. (2025, December). Quantum threat of blockchain and cryptographic systems. Retrieved March 24, 2025.](https://www.lfdecentralizedtrust.org/quantum-threat-of-blockchain-and-cryptographic-systems)"
+
+- &reputation_damage
+  id: ADT3024
+  name: Reputation Damage
+  object-type: technique
+  description: |
+     An adversary may exploit vulnerabilities to intentionally damage the reputation of and erode public trust in a digital asset system.<br><br>Depending on the adversary’s target and capabilities, reputation damage may look like, but is not limited to:<br><ul><li>Fabricating misinformation or manipulating data: Injecting false information into the system, altering financial records, or manipulating transaction data can create confusion and doubt about the system's reliability and integrity.</li><li>Disrupting operations and causing outages: Launching denial-of-service attacks or exploiting vulnerabilities to cause system crashes or downtime, leading to frustration amongst users.</li><li>Leaking sensitive information: Compromising and releasing confidential data such as user information, internal communications, or trading strategies can damage the organization's credibility and trust.</li><li>Impersonating official accounts: Taking control of social media accounts, websites, or communication channels to spread false information, impersonate the organization, and damage its brand image.</li></ul><br>As a result of reputation damage, organizations may experience:<br><ul><li>Loss of user trust and confidence: Damaged reputation can lead to decreased user adoption, engagement, and potential financial losses.</li><li>Regulatory scrutiny: Increased regulatory scrutiny and investigations due to reputational damage can lead to additional compliance burdens and costs.</li><li>Reduced employee morale: Negative publicity and reputational damage can affect employee morale and productivity.</li><li>Asset price fluctuation: In a less regulated market, loss of user confidence in the stability of the asset may lead to a decrease in its value.</li></ul><br>Additionally, a damaged reputation can make the system a more appealing target for future attacks, as adversaries may view it as less secure. The organization may need to invest significantly in reputation management and public relations efforts to rebuild trust and recover from the damage.
+  tactics:
+     - "{{impact.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Central bank digital currency (CBDC) information security and operational risks to central banks.](https://www.bis.org/publ/othp81.pdf)"
+      - "[[2] Institute of Data. (2024, April 2). Cybersecurity Threats and Responses for Government and Business. Retrieved March 25, 2025.](https://www.institutedata.com/us/blog/cybersecurity-threats-and-responses-for-government-and-business/)"
+      - "[[3] McCracken, T. (2024, January 22). Ransomware & Cybercrime: Security Concerns In Crypto. Retrieved March 17, 2025.](https://coinbureau.com/analysis/ransomware-cybercrime-brief-overview-current-security-concerns-crypto-space/)"
+      - "[[4] Reiff, N. (2024, October 10). The Collapse of FTX: What Went Wrong with the Crypto Exchange? Retrieved March 17, 2025.](https://www.investopedia.com/what-went-wrong-with-ftx-6828447)"
+      - "[[5] Lark Editorial Team. (2024, May 26). Cyber Vandalism. Retrieved March 17, 2025.](https://www.larksuite.com/en_us/topics/cybersecurity-glossary/cyber-vandalism#how-cyber-vandalism-works-in-cybersecurity)"
+
+- &scrape_blockchain_data
+  id: ADT3025
+  name: Scrape Blockchain Data
+  object-type: technique
+  description: |
+     An adversary may scrape blockchain data to reveal sensitive information for exploitation.<br><br>Blockchain scraping involves extracting and compiling data directly from the public ledger of a blockchain network. While transactions themselves may be anonymized, other elements like wallet addresses, timestamps, and associated smart contract interactions can paint a revealing picture. <br><br>Adversaries can scrape blockchain data using:<br><ul><li>Custom scripts: Adversaries can write scripts interacting with blockchain APIs or block explorers to extract specific data points.</li><li>Web scraping: Publicly available block data displayed on websites can be scraped using automated tools.</li><li>Blockchain analytics tools: Dedicated platforms offer comprehensive scraping and analysis capabilities, often focusing on specific chains.</li></ul><br>Adversaries learn about the following topics from scraped blockchain data:<br><ul><li>Transaction details: Amounts, timestamps, and address activity can reveal user behavior, trading patterns, and potential vulnerabilities.</li><li>Wallet analysis: Linking addresses across platforms exposes user identities, investment strategies, and connections to other digital assets.</li><li>Smart contract interactions: Analyzing smart contract functions and parameters used in transactions can unveil underlying vulnerabilities or hidden activities.</li><li>Network metrics: Scraping block confirmation times, gas fees, and network hash rate can identify potential weaknesses or manipulation attempts.</li></ul>
+  tactics:
+     - "{{collection.id}}"
+  references:
+      - "[[1] Leung, M. (2022, March 13). Solana Blockchain data scraping. Retrieved March 17, 2025.](https://medium.com/coinmonks/solana-blockchain-data-scraping-2cca0dc056aa)"
+      - "[[2] Muhs, D. (2023). Smart Contract Security Field Guide. Retrieved March 25, 2025.](https://scsfg.io/hackers/exposed-data/)"
+      - "[[3] Lakshmanan, R. (2024, October 30). Researchers Uncover Python Package Targeting Crypto Wallets with Malicious Code. Retrieved March 17, 2025.](https://thehackernews.com/2024/10/researchers-uncover-python-package.html)"
+      - "[[4] Novikava, A. (2024, July 2). Common blockchain security issues and how to prevent them. Retrieved March 25, 2025.](https://nordlayer.com/blog/blockchain-security-issues/)"
+      - "[[5] Schlatt, V., Sedlmeir, J., Traue, J., & Völter, F. (2023). Harmonizing Sensitive Data Exchange and Double-spending Prevention Through Blockchain and Digital Wallets: The Case of E-prescription Management. Distributed Ledger Technologies: Research and Practice, 2(1).](https://doi.org/10.1145/3571509)"
+
+- &scrape_kyc_data
+  id: ADT3026
+  name: Scrape KYC Data
+  object-type: technique
+  description: |
+     An adversary may scrape Know Your Customer (KYC) data to expose user identities.<br><br>Adversaries may turn to scraping KYC data from digital asset platforms. KYC procedures often require users to submit personal details like names, addresses, ID scans, and even tax information. <br><br>Adversaries can perform KYC data scraping by:<br><ul><li>Platform vulnerabilities: Exploiting general platform weaknesses or misconfigurations (e.g., API flaws, SQL injection) to directly access databases.</li><li>Web scraping: Harvesting publicly displayed KYC information from platform interfaces or user profiles.</li><li>Insider attacks: Colluding with platform employees or compromising their accounts to steal data directly.</li></ul><br>Adversaries can collect KYC data such as:<br><ul><li>Personal details: Names, addresses, and phone numbers facilitate targeted phishing, social engineering, or identity theft.</li><li>Financial information: Bank account details or transaction history can be used for financial fraud or blackmail.</li><li>Identification documents: Leaked scans of passports or IDs can enable further identity theft or document forgery.</li></ul>
+  tactics:
+     - "{{collection.id}}"
+  references:
+      - "[[1] Casey. (2021, March 29). “Probably The Largest KYC Data Leak In History” Demonstrates The Importance Of Bitcoin Privacy. Retrieved March 17, 2025.](https://www.nasdaq.com/articles/probably-the-largest-kyc-data-leak-in-history-demonstrates-the-importance-of-bitcoin)"
+      - "[[2] Kmieliauskas, L. (2024, July 18). Another KYC data breach hits the crypto world, affecting thousands of users. Retrieved March 17, 2025.](https://cybernews.com/crypto/another-kyc-data-breach-hits-the-crypto-world/)"
+      - "[[3] RelyComply. (2024, April 17). How Criminals Exploit KYC Vulnerabilities and Loopholes. Retrieved March 17, 2025.](https://relycomply.com/how-criminals-exploit-kyc-vulnerabilities/)"
+      - "[[4] Taylor, S. (2025, February 27). Enhanced KYC: How Data Breaches Are Making It Harder to Trust Traditional KYC Results. Retrieved March 17, 2025.](https://www.sardine.ai/blog/enhanced-kyc)"
+
+- &sidechannel_attack
+  id: ADT3027
+  name: Side-Channel Attack
+  object-type: technique
+  description: |
+     An adversary may exploit information leaked by the device to recreate cryptographic keys.<br><br>Side-channel attacks are stealthy maneuvers where adversaries exploit information unintentionally leaked by devices, like those used in offline digital asset wallets. While these devices aren't directly connected to the internet, they're not immune. <br><br>Adversaries can conduct side-channel attacks on target devices by:<br><ul><li>Monitoring power consumption: Fluctuations in power usage can reveal information about cryptographic operations, potentially leading to key reconstruction.</li><li>Analyzing electromagnetic emissions: Tiny electrical signals emitted by the device can be captured and analyzed to extract sensitive data.</li><li>Measuring execution time: Variations in processing time for different cryptographic operations can betray key information.</li><li>Exploiting similar devices: By studying data leaks from a similar device, attackers might learn enough to crack keys on other devices of the same type.</li></ul><br>With enough effort and expertise, these methods can compromise even robust offline security, allowing attackers to steal digital assets.
+  tactics:
+     - "{{execution.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). Project Polaris Part 1: A handbook for offline payments with CBDC.](https://www.bis.org/publ/othp64.pdf)"
+      - "[[2] Bharath, A., Paduraru, A., & Gaidosch, T. (2024). Cyber Resilience of the Central Bank Digital Currency Ecosystem ” IMF Fintech Note 2024/003. International Monetary Fund.](https://www.imf.org/-/media/Files/Publications/FTN063/2024/English/FTNEA2024003.ashx)"
+      - "[[3] Minwalla, C. (2020, June 24). Security of a CBDC. Retrieved March 24, 2025.](https://www.bankofcanada.ca/2020/06/staff-analytical-note-2020-11/)"
+      - "[[4] Tramer, F., Boneh, D., & Paterson, K. (2020). Remote Side-Channel Attacks on Anonymous Transactions. Proceedings of the 29th USENIX Conference on Security Symposium (SEC’20), 2739–2756.](https://dl.acm.org/doi/10.5555/3489212.3489366)"
+      - "[[5] UK Cyber Defence Service. (2022, April 4). CBDC – Cyber Security – Areas for Consideration. Retrieved March 24, 2025.](https://www.cyberdefenceservice.co.uk/cbdc-cyber-security-areas-for-consideration/)"
+      - "[[6] World Economic Forum. (2021). CBDC Technology Considerations.](https://www3.weforum.org/docs/WEF_CBDC_Technology_Considerations_2021.pdf)"
+
+- &siphon_funds
+  id: ADT3028
+  name: Siphon Funds
+  object-type: technique
+  description: |
+     An adversary may siphon funds from a digital asset system by gradually transferring illicitly acquired funds to external wallets or other destinations. This slow and strategic approach is designed to avoid detection by security systems that might flag large or unusual transactions. By breaking down the total amount into smaller, less conspicuous transfers, the adversary can fly under the radar of automated monitoring tools and human oversight. The adversary may further obscure the trail by using multiple intermediary or anonymous wallets, leveraging mixing services to blend transactions, and timing transfers during periods of low activity or outside regular business hours. When done carefully, an adversary can avoid detection and maintain control over the illicit assets.
+  tactics:
+     - "{{fraud.id}}"
+     - "{{defense_evasion.id}}"
+  references:
+      - "[[1] Chainalysis Team. (2024, December 19). $2.2 Billion Stolen in Crypto in 2024 but Hacked Volumes Stagnate Toward Year-End as DPRK Slows Activity Post-July. Retrieved March 25, 2025.](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2025/)"
+      - "[[2] Cyware Labs. (2020, November 3). Cybercriminals Siphoning Funds from Cryptocurrency Services and Exchanges | Cyware Hacker News. Retrieved March 25, 2025.](https://social.cyware.com/news/cybercriminals-siphoning-funds-from-cryptocurrency-services-and-exchanges-eea23e9d)"
+      - "[[3] Robinson, T. (2021, May 13). Elliptic Follows the $7 Billion in Bitcoin stolen from Bitfinex in 2016. Retrieved March 25, 2025.](https://www.elliptic.co/blog/elliptic-analysis-bitcoin-bitfinex-theft)"
+      - "[[4] Singh, O., & Bains, A. (2025, March 7). How the Lazarus Group Launders Stolen Crypto: Inside the Bybit Heist. Retrieved March 25, 2025.](https://www.ccn.com/education/crypto/how-lazarus-group-launders-stolen-crypto-bybit-heist/)"
+      - "[[5] United Nations. (2023). Crypto assets and central bank digital currencies potential implications for developing countries. Retrieved March 25, 2025.](https://unctad.org/system/files/official-document/gds2023d1_en.pdf)"
+
+- &anonymous_wallets
+  id: ADT3028.001
+  name: Anonymous Wallets
+  object-type: technique
+  description: |
+     An adversary may transfer stolen or illicit funds to anonymous wallets, which are designed to protect the privacy and confidentiality of their users.<br><br>An anonymous crypto wallet is a type of digital wallet that allows users to buy and sell without revealing private information about the user or transaction. Unlike traditional financial accounts, which typically require personal information for registration, anonymous wallets allow users to create and manage accounts without providing any identifying details. <br><br>To facilitate the movement of these illicit funds, adversaries often employ various types of anonymous wallets. These can include software wallets, mobile wallets, and hardware wallets, each offering distinct features and levels of security. These wallets enable the seamless transfer of assets both into and out of the wallet, effectively masking the origin and destination of the funds.<br><br>The primary motivation for adversaries to utilize anonymous wallets is financial gain. By withdrawing assets stored within these wallets, they can convert it into other forms of currency, thereby laundering the funds and integrating them into the legitimate financial system. This process not only obscures the illicit origins of the money but also allows adversaries to profit while remaining undetected.
+  subtechnique-of: "{{siphon_funds.id}}"
+  references:
+      - "[[1] Carlisle, D. (2022, July 18). Unhosted wallets: crypto’s biggest compliance conundrum. Retrieved March 25, 2025.](https://www.elliptic.co/blog/analysis/unhosted-wallets-crypto-s-biggest-compliance-conundrum)"
+      - "[[2] CNC Intelligence. (2022, November 23). Cryptocurrency Tracing (How It’s Done). Retrieved March 25, 2025.](https://cncintel.com/cryptocurrency-tracing/)"
+      - "[[3] S, Aaron. (2024, December 28). Anonymous Bitcoin Wallet and How to Get Bitcoins Anonymously. Retrieved March 25, 2025.](https://www.bitdegree.org/crypto/tutorials/anonymous-bitcoin-wallet#storing-bitcoin-anonymously)"
+      - "[[4] Wilson, T. (2024, July 15). Exclusive: North Korean hackers sent stolen crypto to wallet used by Asian payment firm. Retrieved March 25, 2025.](https://www.reuters.com/technology/cybersecurity/north-korean-hackers-sent-stolen-crypto-wallet-used-by-asian-payment-firm-2024-07-15/)"
+
+- &layering
+  id: ADT3028.003
+  name: Layering
+  object-type: technique
+  description: |
+     An adversary may obscure the origin of illicit funds through multiple complex transactions and processes, effectively "layering" the digital assets to make them difficult to trace.<br><br>Layering involves breaking down large quantities of digital assets into smaller transactions and moving them through various accounts, wallets, or platforms to create a complex trail. This technique often exploits the pseudonymous and decentralized nature of blockchain technology, making it challenging for investigators to trace the origin of funds. Common methods include transferring assets between multiple wallets, using cryptocurrency mixers or tumblers, and converting funds between different cryptocurrencies, particularly privacy-focused ones. Criminals may also use decentralized exchanges (DEXs), which often have fewer Know Your Customer (KYC) requirements, or purchase digital assets like Non-Fungible Tokens to add additional layers of transactions.<br><br>The ultimate goal of layering is to "clean" the money by creating a web of transactions that makes it difficult for law enforcement or regulatory agencies to trace the flow of funds back to their illicit origin. An adversary often utilizes layering for financial gain.
+  subtechnique-of: "{{siphon_funds.id}}"
+  references:
+      - "[[1] Elliptic. (2023). Crypto Money Laundering Explained: cryptoasset exchanges.](https://www.elliptic.co/blog/crypto-money-laundering-explained-cryptoasset-exchanges)"
+      - "[[2] Hudson Intelligence. (n.d.). Mixers and CoinJoin. Retrieved March 25, 2025.](https://www.fraudinvestigation.net/cryptocurrency/tracing/mixers-and-coinjoin)" 
+      - "[[3] Singh, O., & Bains, A. (2025, March 7). How the Lazarus Group Launders Stolen Crypto: Inside the Bybit Heist. Retrieved March 25, 2025.](https://www.ccn.com/education/crypto/how-lazarus-group-launders-stolen-crypto-bybit-heist/)"
+
+- &money_mules
+  id: ADT3028.004
+  name: Money Mules
+  object-type: technique
+  description: |
+     An adversary may leverage money mules to launder stolen digital assets, obscuring the financial trail and evading detection within a digital asset system. <br><br>Money mules are individuals who transfer or move illicitly obtained funds on behalf of adversaries in order to obscure the origin of the money and make it harder to trace. These individuals act as intermediaries in schemes designed to launder money derived from illegal activities such as fraud, cybercrime, or theft.<br><br>Money mules are often recruited through deceptive means, such as job advertisements promising easy money for minimal effort, or through direct manipulation, such as threats or coercion. In some cases, they may knowingly participate in exchange for financial compensation, while others may be unaware they are facilitating criminal activity.<br><br>By leveraging money mules, the adversary can break the transaction trail into smaller, more complex steps, spreading the funds across multiple accounts, cryptocurrencies, or financial systems. This fragmentation makes investigations more difficult and reduces the likelihood of detection. Additionally, money mules provide a way to bypass anti-money laundering (AML) controls and evade scrutiny from regulators, authorities, or financial institutions. Many digital asset systems flag large or suspicious transactions or trades, but by using mules to move smaller amounts of money across multiple accounts, an attacker can avoid triggering these alerts.<br><br>Whether knowingly or unknowingly, money mules are a critical tool for adversaries seeking to launder money, achieve financial gain, or reintegrate stolen funds into the legitimate financial system.
+  subtechnique-of: "{{siphon_funds.id}}"
+  references:
+      - "[[1] Elliptic. (2023). Crypto Money Laundering Explained: cryptoasset exchanges.](https://www.elliptic.co/blog/crypto-money-laundering-explained-cryptoasset-exchanges)"
+      - "[[2] Kaur, G. (2024, October 20). What is a Crypto Money Mule Scam and how to avoid it? Retrieved March 18, 2025.](https://cointelegraph.com/learn/articles/crypto-money-mule-scam-how-to-avoid-it)"
+      - "[[3] Tio. (2021, January 26). What is a Crypto Money Mule? A Case Study - Easy Crypto. Retrieved March 25, 2025.](https://hub.easycrypto.com/crypto-money-mule)"
+      - "[[4] United States Department of Homeland Security. (2023). Combatting Illicit Activity Utilizing Financial Technologies and Cryptocurrencies.](https://www.dhs.gov/sites/default/files/2022-09/Combatting%20Illicit%20Activity%20.pdf)"
+
+- &peel_chains
+  id: ADT3028.005
+  name: Peel Chains
+  object-type: technique
+  description: |
+     An adversary can utilize peel chains to launder a large amount of cryptocurrency through a sequence of minor transactions. <br><br>Adversaries are able to break down a large sum of digital asset value into small, incremental money laundering transactions. In each step, a small amount of cryptocurrency is "peeled off" from the victim wallet and transferred to another address, often linked to exchanges where it can be converted into fiat currency or other digital assets. The remaining digital asset value is passed to a new change address, and the process is repeated multiple times.<br><br>By using low-value transfers, peel chains are designed to avoid triggering anti-money laundering (AML) alerts or mandatory reporting requirements at digital asset exchanges. This tactic allows the perpetrators to move funds discreetly without drawing attention from authorities or regulators. Cryptocurrency scammers and thieves often construct peel chains with extreme complexity and length, making it significantly harder to trace the flow of assets to their final destination or conversion point.
+  subtechnique-of: "{{siphon_funds.id}}"
+  references:
+      - "[[1] Hudson Intelligence. (n.d.). What is a Peel Chain? Retrieved March 18, 2025.](https://www.fraudinvestigation.net/cryptocurrency/tracing/peel-chain)"
+      - "[[2] Kappos, G., Yousaf, H., Stütz, R., Rollet, S., Haslhofer, B., & Meiklejohn, S. (2025). How to Peel a Million: Validating and Expanding Bitcoin Clusters.](https://www.usenix.org/system/files/sec22-kappos.pdf)"
+      - "[[3] Merkle Science. (2024, December 19). Hack Track: DMM Flow of Funds Analysis. Retrieved March 18, 2025.](https://www.merklescience.com/blog/hack-track-dmm-flow-of-funds-analysis)"
+      - "[[4] TRM Insights. (2024, May 16). Detecting the Invisible: The Power of TRM Labs’ SignaturesTM in Blockchain Investigations. Retrieved March 18, 2025.](https://www.trmlabs.com/post/detecting-the-invisible-the-power-of-trm-labs-signatures-tm-in-blockchain-investigations)"
+      - "[[5] Whitaker, R. (2024, December 17). What Is a Peel Chain in Crypto Money Laundering? Retrieved March 18, 2025.](https://www.merklescience.com/blog/what-is-a-peel-chain-in-crypto-money-laundering)"
+
+- &smart_contract_implementation_analysis
+  id: ADT3029
+  name: Smart Contract Implementation Analysis
+  object-type: technique
+  description: |
+     An adversary may study a smart contract implementation to identify potential vulnerabilities to exploit weaknesses and misuse the system.<br><br>Smart contracts serve as a core feature of many digital asset systems, making them prime targets for adversaries. This technique focuses on the adversary’s comprehensive analysis of the smart contract implementation, aiming to gain a deep understanding of involved functions, dependencies, and access controls. <br><br>Adversaries can analyze smart contract implementations by:<br><ul><li>Code analysis: Scrutinizing the smart contract's publicly available source code to identify flaws in logic, access control, or resource management.</li><li>Behavioral analysis: Examining transaction traces and network interactions to uncover vulnerabilities or unexpected behaviors.</li><li>Fuzzing: Feeding the contract with malformed data or unexpected inputs to trigger crashes or expose errors.</li><li>Dependency analysis: Investigating the contract's interactions with external oracles, other smart contracts, and blockchain components to identify weaknesses in integration.</li></ul><br>This analysis enables adversaries to craft attacks tailored to the contract's unique vulnerabilities, often enabling them to make unauthorized transactions and cause unpredictable behavior in the underlying system.
+  tactics:
+     - "{{reconnaissance.id}}"
+  references:
+      - "[[1] Bank for International Settlements. (2023). BIS Consultative Group on Risk Management.](https://www.bis.org/publ/othp81.pdf)"
+      - "[[2] Bank for International Settlements. (2023). Project Polaris Part 3: Closing the CBDC cyber threat modelling gaps.](https://www.bis.org/publ/othp71.pdf)"
+      - "[[3] Cryptopedia Staff. (2025, February 26). The DAO: What Was the DAO and How Was it Hacked? Retrieved March 7, 2025.](https://www.gemini.com/cryptopedia/the-dao-hack-makerdao)"
+      - "[[4] Hansen, T., & Delak, K. (2022). Security Considerations for a Central Bank Digital Currency.](https://www.federalreserve.gov/econres/notes/feds-notes/security-considerations-for-a-central-bank-digital-currency-20220203.html)"
+      - "[[5] Reiners, L. (2021, September 21). CBDC - How Dangerous is Programmability? Retrieved March 7, 2025.](https://sites.duke.edu/thefinregblog/2021/09/21/cbdc-how-dangerous-is-programmability/)"
+
+- &default_visibility_abuse
+  id: ADT3029.002
+  name: Default Visibility Abuse
+  object-type: technique
+  description: |
+     An adversary may analyze unintentionally exposed functions and variables in smart contracts to gather information for potential attacks.<br><br>Smart contracts rely on access modifiers to control who can interact with their functions and variables. However, developers may unintentionally leave elements with inappropriate public or internal visibility, creating the vulnerability known as "default visibility." <br><br>Adversaries can abuse default visibility by:<br><ul><li>Static analysis: Examining the smart contract's code to identify functions and variables with unintended public or internal visibility.</li><li>Fuzzing: Feeding the contract with malformed data or unexpected inputs to trigger errors and expose hidden functionalities.</li><li>Blockchain analysis: Monitoring transaction logs and events to identify functions being used and potentially inferring exposed elements.</li></ul><br>Adversaries actively seek out these exposed elements for malicious purposes, including:<br><ul><li>Data theft: Exposed variables or functions might reveal sensitive information like private keys, transaction details, or internal state variables, enabling attackers to steal funds or manipulate the contract's logic.</li><li>Operational disruption: Publicly accessible functions, even if not intended for external interaction, could be exploited to trigger unintended actions, disrupt operations, or even crash the contract.</li><li>Self-destruction: In extreme cases, exposed functions with powerful functionalities like self-destruct could be exploited to permanently delete the contract and its associated assets.</li></ul>
+  subtechnique-of: "{{smart_contract_implementation_analysis.id}}"
+  references:
+      - "[[1] ImmuneBytes. (2023). Solidity Security Vulnerability: Function Default Visibilities. Retrieved March 11, 2025.](https://www.immunebytes.com/blog/solidity-security-vulnerability-function-default-visibilities/)"
+      - "[[2] Iuliano, G., & Nucci, D. (2024). Smart Contract Vulnerabilities, Tools, and Benchmarks: An Updated Systematic Literature Review. Retrieved March 20, 2025.](https://arxiv.org/abs/2412.01719)"
+      - "[[3] Li, X. (2023). An Expert Knowledge Generation Model in Smart Contract Vulnerability Fuzzing. 2023 IEEE 9th Intl Conference on Big Data Security on Cloud (BigDataSecurity), IEEE Intl Conference on High Performance and Smart Computing, (HPSC) and IEEE Intl Conference on Intelligent Data and Security (IDS), 51–56.](https://doi.org/10.1109/bigdatasecurity-hpsc-ids58521.2023.00019)"
+      - "[[4] Muhs, D. (2020a). SWC-100 - Smart Contract Weakness Classification (SWC). Retrieved March 11, 2025.](https://swcregistry.io/docs/SWC-100/)"    
+      - "[[5] Muhs, D. (2020b). SWC-108 - Smart Contract Weakness Classification (SWC). Retrieved March 11, 2025.](https://swcregistry.io/docs/SWC-108/)"
+      - "[[6] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &endorser_identity_exposure
+  id: ADT3029.003
+  name: Endorser Identity Exposure
+  object-type: technique
+  description: |
+     An adversary may identify endorser identities in Hyperledger Fabric endorsement policies to launch attacks compromising privacy, network integrity, and availability.<br><br>In Hyperledger Fabric, smart contract validation relies on endorsement policies specifying authorized entities (endorsers) responsible for evaluating and approving transactions. These endorsers, typically belonging to distinct organizations, play a crucial role in ensuring consensus and security. However, exposing their identities can pave the way for various malicious activities.<br><br>Adversaries can expose endorser identities by:<br><ul><li>Configuration leaks: Accidental or intentional leaks of endorsement policy configurations could disclose endorser identities.</li><li>Blockchain analysis: Sophisticated blockchain analysis techniques might infer endorser identities from transaction patterns and network structure.</li><li>Social engineering: Phishing or other deceptive tactics could be used to trick individuals into revealing endorser information.</li></ul><br>Adversaries can gain insights that enabling them to execute:<br><ul><li>Denial-of-Service (DoS) attacks: By identifying endorsers, attackers can target them with excessive transaction requests or resource-intensive operations, overwhelming their systems and disrupting the endorsement process. This can significantly hinder transaction validation and compromise network functionality.</li><li>Privacy breaches: Exposed endorser identities can compromise network privacy, potentially revealing sensitive information about organizations participating in the channel. This could lead to reputational damage, targeted attacks, or unauthorized access to confidential data.</li><li>Bribery attempts: Knowledge of endorsers might enable attackers to attempt bribery or social engineering tactics to manipulate specific approvals, jeopardizing the network's integrity and fairness.</li></ul>
+  subtechnique-of: "{{smart_contract_implementation_analysis.id}}"
+  references:
+      - "[[1] Andola, N., Raghav, Gogoi, M., Venkatesan, S., & Verma, S. (2019). Vulnerabilities on Hyperledger Fabric. Pervasive and Mobile Computing, 59, 101050.](https://doi.org/10.1016/j.pmcj.2019.101050)"
+      - "[[2] Androulaki, E., De Caro, A., Neugschwandtner, M., & Sorniotti, A. (2019). Endorsement in Hyperledger Fabric. 2019 IEEE International Conference on Blockchain (Blockchain).](https://doi.org/10.1109/blockchain.2019.00077)"
+
+- &nondeterministic_component_analysis
+  id: ADT3029.004
+  name: Nondeterministic Component Analysis
+  object-type: technique
+  description: |
+     An adversary may analyze nondeterministic components in smart contracts to identify exploitable vulnerabilities and manipulate contract behavior.<br><br>Smart contracts can incorporate nondeterministic components, specifically global variables and pseudo-random number generators (PRNGs), which may be manipulated to produce unintended outcomes during contract execution. Global variables introduce vulnerabilities due to external influences and a lack of control. For example, if external actors manipulate a global variable responsible for storing transaction fees, it can lead to disruptions in the entire economic model. The absence of regulatory capabilities for functions over these variables increases the risk of unintended consequences. Likewise, PRNGs, designed to introduce randomness, become susceptible to exploitation when predictable seed values or algorithmic weaknesses are identified.<br><br>Exploiting these nondeterministic components may allow an adversary to corrupt the contract or predict outcomes, which may ultimately result in financial losses.
+  subtechnique-of: "{{smart_contract_implementation_analysis.id}}"
+  references:
+      - "[[1] Li, X. (2023). An Expert Knowledge Generation Model in Smart Contract Vulnerability Fuzzing. 2023 IEEE 9th Intl Conference on Big Data Security on Cloud (BigDataSecurity), IEEE Intl Conference on High Performance and Smart Computing, (HPSC) and IEEE Intl Conference on Intelligent Data and Security (IDS), 51–56.](https://doi.org/10.1109/bigdatasecurity-hpsc-ids58521.2023.00019)"
+      - "[[2] Paulsen, C. R., Liang, K., Chen, H., & Scharenborg, O. E. (2021). Revisiting smart contract vulnerabilities in Hyperledger Fabric. Retrieved March 11, 2025.](https://repository.tudelft.nl/islandora/object/uuid%3Add09d153-a9df-4c1b-a317-d93c1231ee28)"
+      - "[[3] Qian, P., He, J., Lu, L., Wu, S., Lu, Z., Wu, L., … He, Q. (2023). Demystifying Random Number in Ethereum Smart Contract: Taxonomy, Vulnerability Identification, and Attack Detection. IEEE Transactions on Software Engineering, 1–18.](https://doi.org/10.1109/tse.2023.3271417)"
+      - "[[4] Wang, S., Zhang, C., & Su, Z. (2019). Detecting nondeterministic payment bugs in Ethereum smart contracts. Proceedings of the ACM on Programming Languages, 3(OOPSLA), 1–29.](https://doi.org/10.1145/3360615)"
+      - "[[5] Zaazaa, O., & Bakkali, Hanan El. (2023). Unveiling the Landscape of Smart Contract Vulnerabilities: A Detailed Examination and Codification of Vulnerabilities in Prominent Blockchains. International Journal of Computer Networks & Communications, 15(6), 55–75.](https://doi.org/10.5121/ijcnc.2023.15603)"
+
+- &oracle_analysis
+  id: ADT3029.005
+  name: Oracle Analysis
+  object-type: technique
+  description: |
+     An adversary may identify the specific oracles utilized by a target smart contract to compromise the contract's intended functionality.<br><br>Oracles are crucial components that connect smart contracts to real-world data, enabling them to function based on external information. Understanding which oracles that a contract relies upon is essential for assessing its security posture and potential attack vectors.<br><br>Adversaries can conduct oracle analysis by:<br><ul><li>Static analysis: Examining the smart contract code to identify calls to external contracts and potential oracle addresses.</li><li>Blockchain exploration: Tracing transactions and interactions to uncover external contracts involved.</li><li>On-chain event monitoring: Analyzing logs and transactions emitted by the contract to observe interactions with oracles.</li></ul><br>Adversaries gain insights enabling them to:<br><ul><li>Identify vulnerabilities: Assess potential weaknesses in the oracle integration or the chosen oracles themselves.</li><li>Prepare for oracle manipulation: Gain knowledge for future exploitation attempts against the oracles.</li></ul><br>Knowledge gained through this process can inform targeted attacks and exploit development in later stages of a cyberattack.
+  subtechnique-of: "{{smart_contract_implementation_analysis.id}}"
+  references:
+      - "[[1] Chainlink. (2024, January 12). What Is an Oracle in Blockchain? Retrieved March 17, 2025.](https://chain.link/education/blockchain-oracles)"
+      - "[[2] ImmuneBytes. (2023, August 5). What are Oracle Manipulation Attacks in Blockchain? Retrieved March 17, 2025.](https://immunebytes.com/blog/what-are-oracle-manipulation-attacks-in-blockchain/)"
+
+- &timestamp_dependence_analysis
+  id: ADT3029.006
+  name: Timestamp Dependence Analysis
+  object-type: technique
+  description: |
+     An adversary may examine transaction timestamps to predict the timing and sequence of events within a smart contract. Smart contracts often rely on timestamps to execute critical logic, functions at specific times, or to enforce conditional triggers. <br><br>Adversaries may be able to exploit these dependencies by analyzing how they influence the contract’s logic and manipulating the timestamps. This could allow the adversary to gain unfair advantages in the applications or sabotage the logic and execution of the smart contracts and may result in financial losses.<br><br>Adversaries can conduct timestamp dependence analysis by:<br><ul><li>Source code analysis: Examining the contract code to identify functions using timestamps for critical decisions.</li><li>Blockchain data analysis: Analyzing historical transaction data to uncover patterns and predictable timestamp behaviors.</li></ul><br>Adversaries gain insights enabling them to:<br><ul><li>Identify vulnerabilities: Exploit weaknesses like predictable or manipulable timestamps.</li><li>Predict contract behavior: Gain insights into future actions based on timestamp triggers.</li><li>Launch targeted attacks: Utilize various methods such as front-running, reentrancy, price manipulation, algorithmic trading, or timestamp manipulation. </li></ul>
+  subtechnique-of: "{{smart_contract_implementation_analysis.id}}"
+  references:
+      - "[[1] Tang, X., Shi, L., Lai, A., Du, Y., Deng, J., Fu, J., & Li, J. (2023, December). Security Analysis of Smart Contract Migration from Ethereum to Arbitrum. Retrieved March 6, 2025.](https://arxiv.org/html/2307.14773v2)"
+      - "[[2] Vani, S., Doshi, M., Nanavati, A., & Kundu, A. (2022). Vulnerability Analysis of Smart Contracts.](https://arxiv.org/pdf/2212.07387.pdf)"
+      - "[[3] Vulnerability: Timestamp Dependence. (2024). Retrieved March 6, 2025.](https://owasp.org/www-project-smart-contract-top-10/2023/en/src/SC03-timestamp-dependence.html)"
+
+- &unsecured_credentials
+  id: ADT1552
+  name: Unsecured Credentials
+  object-type: technique
+  ATT&CK-reference:
+    id: ADT1552
+    url: https://attack.mitre.org/techniques/T1552/
+  description: |
+     Adversaries may search compromised systems to find and obtain insecurely stored credentials. These credentials can be stored and/or misplaced in many locations on a system, including plaintext files (e.g. Bash History), operating system or application-specific repositories (e.g. Credentials in Registry), or other specialized files/artifacts (e.g. Private Keys).<br><br><a href=https://attack.mitre.org/techniques/T1552/ target="_blank"> To read more, please see the MITRE ATT&CK page for this technique</a>
+  tactics:
+     - "{{credential_access.id}}"
+
+- &private_keys
+  id: ADT1552.004
+  name: Private Keys
+  object-type: technique
+  ATT&CK-reference:
+    id: ADT1552.004
+    url: https://attack.mitre.org/techniques/T1552/004/
+  description: |
+     An adversary may search for private key certificate files on compromised systems for insecurely stored credentials to gain complete control over their assets.<br><br>Private keys are the fundamental elements securing digital assets, acting as the password to unlock wallets, sign transactions, and access funds. In the context of digital asset systems, unsecured private keys present a critical security risk, offering adversaries a gateway to an abundance of valuable resources. <br><br>Adversaries may utilize obtained private keys for:<br><br>1. Direct Theft and Transfer:<br><ul><li>Stealing funds: Once an attacker obtains a private key, they can directly transfer funds from the victim's wallet to their own, essentially stealing the entire balance.</li><li>Manipulating transactions: Attackers can use the stolen key to create unauthorized transactions, such as sending funds to different addresses or manipulating exchange rates for personal gain.</li><li>Double-spending: In some systems, attackers can exploit vulnerabilities and the stolen key to create "double-spending" transactions, spending the same digital asset twice.</li></ul><br>2. Identity Theft and Impersonation:<br><ul><li>Impersonating the victim: With the private key, attackers can impersonate the victim and interact with the system as if they were the legitimate user. This allows them to access sensitive information, perform unauthorized actions, and potentially damage the victim's reputation.</li><li>Launching phishing attacks: Attackers can use the stolen key to sign phishing messages, making them appear more legitimate and increasing the chances of tricking other users into revealing their own credentials.</li><li>Disrupting the system: Attackers can manipulate the system by signing malicious transactions or flooding the network with invalid requests, potentially causing service disruptions or instability.</li></ul><br>3. Escalating Privileges and Lateral Movement:<br><ul><li>Accessing other accounts: If the stolen key grants access to other systems or accounts linked to the digital asset system, attackers can leverage it to gain further privileges and expand their attack scope.</li><li>Launching further attacks: Attackers can use the compromised key as a stepping stone to launch targeted attacks against other users or critical infrastructure within the system.</li></ul><br><br><a href=https://attack.mitre.org/techniques/T1552/004/ target="_blank"> To read more, please see the MITRE ATT&CK page for this technique</a>
+  subtechnique-of: "{{unsecured_credentials.id}}"
+  references:
+      - "[[1] Behnke, R. (2024). Explained: The DMM Bitcoin Hack (May 2024). Retrieved March 18, 2025.](https://www.halborn.com/blog/post/explained-the-dmm-bitcoin-hack-may-2024)"
+      - "[[2] Chainalysis Team. (2024, December 19). $2.2 Billion Stolen in Crypto in 2024 but Hacked Volumes Stagnate Toward Year-End as DPRK Slows Activity Post-July. Retrieved March 25, 2025.](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2025/)"
+      - "[[3] Guri, M. (2018). BeatCoin: Leaking Private Keys from Air-Gapped Cryptocurrency Wallets. 2018 IEEE International Conference on Internet of Things (IThings) and IEEE Green Computing and Communications (GreenCom) and IEEE Cyber, Physical and Social Computing (CPSCom) and IEEE Smart Data (SmartData), 1308–1316.](https://doi.org/10.1109/cybermatics_2018.2018.00227)"
+      - "[[4] ImmuneBytes. (2024). List of Compromised Private Key Crypto Hacks. Retrieved March 18, 2025.](https://immunebytes.com/blog/list-of-compromised-private-key-crypto-hacks/)"
+
+- &use_anonymizing_services
+  id: ADT3030
+  name: Use Anonymizing Services
+  object-type: technique
+  description: |
+     An adversary can use anonymizing services to obfuscate the origin and destination of digital asset transactions.   <br><br>By utilizing anonymizing services, the attacker can make it more difficult for authorities or investigators to trace the movement of stolen or illicit funds, effectively hiding their tracks. Adversaries can obfuscate digital asset transactions through Peer-to-Peer Exchanges, mixers or tumblers, or services such as CoinJoin.<br><ul><li></li></ul><br>Adversaries utilize anonymous services for: <br><ul><li>Financial gain: Adversaries can utilize these services to funnel cryptocurrency to their desired destination to ultimately exchange for fiat currency.</li></ul>
+  tactics:
+     - "{{defense_evasion.id}}"
+  references:
+      - "[[1] Chainalysis Team. (2025). The 2025 Crypto Crime Report.](https://www.chainalysis.com/wp-content/uploads/2025/03/the-2025-crypto-crime-report-release.pdf)"
+      - "[[2] Chainalysis Team. (2024, February 15). 2024 Crypto Money Laundering Report. Retrieved March 25, 2025.](https://www.chainalysis.com/blog/2024-crypto-money-laundering/)"
+      - "[[3] Crystal Intelligence. (2024, July 10). Uncovering money muling and nested services in crypto. Retrieved March 25, 2025.](https://crystalintelligence.com/investigations/uncovering-money-muling-and-nested-services-in-crypto/)"
+      - "[[4] United States Department of Homeland Security. (2023). Combatting Illicit Activity Utilizing Financial Technologies and Cryptocurrencies.](https://www.dhs.gov/sites/default/files/2022-09/Combatting%20Illicit%20Activity%20.pdf)"
+
+- &coinjoin
+  id: ADT3030.001
+  name: CoinJoin
+  object-type: technique
+  description: |
+     An adversary can utilize a CoinJoin for Bitcoin transactions to combine inputs from different users and return multiple outputs with identical values.<br><br>CoinJoin is a privacy-enhancing Bitcoin transaction method that adversaries can exploit to bypass regulations and conduct illicit activities. Unlike traditional mixers, CoinJoin allows users to maintain custody of their funds throughout the process, making it a non-custodial solution for obscuring the ownership of Bitcoin. By combining inputs from multiple users and redistributing identical outputs, CoinJoin effectively disrupts the ability of law enforcement and blockchain investigators to trace the flow of funds. The process works by pooling Bitcoin inputs from various users and creating outputs of uniform value. Because all outputs are identical in value, it becomes theoretically impossible to determine which Bitcoin addresses correspond to the original contributors. This uniformity defeats heuristic-based clustering algorithms commonly used to trace transactions, providing adversaries with a powerful tool to obscure their activities.<br><br>CoinJoin is often integrated into privacy-focused cryptocurrency wallets, which promote enhanced anonymity. These wallets enable users to repeatedly conduct CoinJoin transactions, further complicating efforts to trace funds. Unlike centralized mixers, CoinJoin transactions are non-custodial, meaning the service never holds users’ funds, which adds an additional layer of security and privacy for adversaries seeking to evade compliance measures. <br><br>Adversaries can leverage CoinJoin to launder stolen funds or conduct illicit transactions. CoinJoin’s ability to anonymize transactions and defeat blockchain analysis tools makes it a preferred method for adversaries seeking to bypass anti-money laundering (AML) regulations and Know Your Customer (KYC) protocols. Its integration into privacy wallets and non-custodial nature further complicates efforts to monitor and regulate illicit cryptocurrency activity, posing significant challenges for financial institutions and law enforcement agencies.
+  subtechnique-of: "{{use_anonymizing_services.id}}"
+  references:
+      - "[[1] Chainalysis Team. (2024, December 19). $2.2 Billion Stolen in Crypto in 2024 but Hacked Volumes Stagnate Toward Year-End as DPRK Slows Activity Post-July. Retrieved March 25, 2025.](https://www.chainalysis.com/blog/crypto-hacking-stolen-funds-2025/)"
+      - "[[2] EclecticIQ Threat Research Team. (2025). Tools to Identify Exfiltration of Large Cryptocurrency Holdings Will Reduce Risk of Large Cyberattacks and Fraud on DeFi Platforms. Retrieved March 18, 2025.](https://blog.eclecticiq.com/tools-to-identify-exfiltration-of-large-cryptocurrency-holdings-will-reduce-risk-of-large-cyberattacks-and-fraud-on-defi-platforms#a5)"
+      - "[[3] Hudson Intelligence. (n.d.). Layering | Cryptocurrency Investigation. Retrieved March 18, 2025.](https://www.fraudinvestigation.net/cryptocurrency/tracing/layering)"
+      - "[[4] Merkle Science. (2024). Hack Track: DMM Flow of Funds Analysis. Retrieved March 18, 2025.](https://www.merklescience.com/blog/hack-track-dmm-flow-of-funds-analysis)"
+
+- &peer_to_peer_exchanges
+  id: ADT3030.002
+  name: Peer to Peer Exchanges
+  object-type: technique
+  description: |
+     An adversary can utilize peer-to-peer exchanges to buy, sell, and trade cryptocurrencies without the regulatory supervision and protections of a commercial exchange.<br><br>Adversaries can exploit peer-to-peer (P2P) cryptocurrency exchanges to bypass regulatory and compliance measures, creating challenges for financial institutions tasked with monitoring suspicious activity. When cryptocurrency is converted into fiat currency through P2P transactions, the process occurs outside the oversight of regulated cryptocurrency exchanges or financial institutions. In these transactions, individuals or entities directly exchange cryptocurrency for fiat currency by sharing wallet information and transferring fiat funds through traditional methods, such as cash exchanges, wire transfers, or Automated Clearing House payments. Because these fiat transfers resemble ordinary transactions between two parties, their cryptocurrency origins often remain undetected unless flagged through inquiry or monitoring for unusual patterns.<br><br>Unlike conversions facilitated by registered cryptocurrency exchanges, which are required to comply with anti-money laundering (AML) regulations and Know Your Customer (KYC) protocols, P2P transactions bypass these safeguards entirely. Registered exchanges are required to maintain AML programs, collect customer information, and share data under the "travel rule," which mandates the transfer of customer details, such as names and account numbers, when funds are moved. Financial institutions can identify transactions originating from registered exchanges and assess their compliance with regulatory standards.<br><br>In contrast, P2P transactions lack these compliance measures, as they occur directly between parties without intermediary oversight. Cryptocurrency wallet holders engaging in P2P exchanges can move funds anonymously, bypassing financial institutions entirely until fiat funds are deposited into a bank account. At this point, the financial institution has only a limited view of the wallet holder's cryptocurrency activity, making it difficult to trace the origin of the funds. This anonymity poses significant regulatory and compliance risks, as financial institutions have little insight into the wallet holder's activities or the authenticity of the transaction. The anonymity inherent in cryptocurrency and the decentralized nature of P2P exchanges make them attractive tools for adversaries seeking to introduce potentially illicit funds into the banking system.
+  subtechnique-of: "{{use_anonymizing_services.id}}"
+  references:
+      - "[[1] Daniels, D., & Raad, W. (2021, March). Banking, Professional Perspective - AML Issues in Cryptocurrency and Blockchain Technology. Retrieved March 18, 2025.](https://www.bloomberglaw.com/external/document/XB8LV1T4000000/banking-professional-perspective-aml-issues-in-cryptocurrency-an)"
+      - "[[2] Elliptic. (2020). Financial Crime Typologies in Cryptoassets The Concise Guide for Compliance Leaders.](https://www.elliptic.co/hubfs/Financial%20Crime%20Typologies%20in%20Cryptoassets%20Guides%20(All%20Assets)/Typologies_Concise%20Guide_12-20.pdf)"
+      - "[[3] Houton, J. (2023). How criminals use crypto exchanges for money laundering. Retrieved March 18, 2025.](https://www.idnow.io/blog/how-criminals-leverage-crypto-money-laundering/)"
+      - "[[4] Verderosa, R. (2025). How P2P Crypto Exchanges Can Ensure Regulatory Compliance. Retrieved March 18, 2025.](https://alphapoint.com/blog/p2p-cryptocurrency-exchange-compliance/)"
+
+- &tumblers
+  id: ADT3030.003
+  name: Tumblers
+  object-type: technique
+  description: |
+     An adversary can conduct illicit transactions utilizing mixers or tumblers to pool their illicit cryptocurrency with other users in an online service and send "clean" cryptocurrency in different sums.<br><br>Cryptocurrency mixers, also known as tumblers, are online services designed to obscure the audit trail of digital assets by pooling cryptocurrency from multiple users and redistributing it in varying amounts. This process makes it difficult to trace the origins or destinations of funds, effectively "cleaning" tainted cryptocurrency and enabling adversaries to bypass regulatory and compliance measures.<br><br>Mixers work by breaking down cryptocurrency transactions into smaller, randomized transfers across multiple wallets, creating a fragmented and opaque transaction history. This obfuscation prevents law enforcement and blockchain investigators from efficiently mapping the flow of funds tied to fraud, money laundering, or other criminal activities. By severing the link between the sender and recipient, mixers shield illicit actors from scrutiny while allowing them to launder large sums of cryptocurrency with ease.
+  subtechnique-of: "{{use_anonymizing_services.id}}"
+  references:
+      - "[[1] Chainalysis Team. (2025). The 2025 Crypto Crime Report.](https://www.chainalysis.com/wp-content/uploads/2025/03/the-2025-crypto-crime-report-release.pdf)"
+      - "[[2] Hudson Intelligence. (n.d.). Mixers and CoinJoin. Retrieved March 25, 2025.](https://www.fraudinvestigation.net/cryptocurrency/tracing/mixers-and-coinjoin)"
+      - "[[3] United States Department of Homeland Security. (2023). Combatting Illicit Activity Utilizing Financial Technologies and Cryptocurrencies.](https://www.dhs.gov/sites/default/files/2022-09/Combatting%20Illicit%20Activity%20.pdf)"
+      - "[[4] United States Financial Crimes Enforcement Network. (2020, October 19). First Bitcoin \"Mixer\" Penalized by FinCEN for Violating Anti-Money Laundering Laws. Retrieved March 25, 2025.](https://www.fincen.gov/news/news-releases/first-bitcoin-mixer-penalized-fincen-violating-anti-money-laundering-laws)"
+

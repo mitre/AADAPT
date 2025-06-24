@@ -1,0 +1,12 @@
+tactics: |
+  Tactics are tactical adversary goals during an attack. They represent the “why” of a technique: the reason for performing an action.
+  Tactics serve as useful contextual categories for individual techniques and cover standard notations for things adversaries do during an operation. See
+  <a href="https://attack.mitre.org/docs/ATTACK_Design_and_Philosophy_March_2020.pdf">MITRE ATT&CK's design and philosophy paper</a> for more information.
+techniques: |
+  Techniques describe the means by which adversaries achieve tactical goals. They represent “how” an adversary achieves a tactical objective by performing an action.
+  
+
+  Techniques may also represent “what” an adversary gains by performing an action. There can be multiple techniques in each tactic category as there are many ways to achieve tactical objectives.
+  See <a href="https://attack.mitre.org/docs/ATTACK_Design_and_Philosophy_March_2020.pdf">MITRE ATT&CK's design and philosophy paper</a> for more information.
+mitigations: |
+  Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed.

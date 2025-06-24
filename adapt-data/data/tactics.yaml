@@ -1,0 +1,96 @@
+---
+
+# Stylistic notes:
+#   - keep keys in a consistent order: id, name, object-type, description
+#   - create an anchor for each technique
+#   - use the literal block style (|) for the description
+#   - the description text is interpreted as markdown
+#   - use a new line after each sentence in the description
+#   - use the block list format for the list of tactic ids
+#   - use the anchor references for ids and names wherever possible
+
+# Stub technique object for adding new techniques.
+# Copy and paste this section, then increment the id.
+#
+# - &short_name
+#   id: ADTAID
+#   name: Example Technique
+#   description: |
+#     The description of the technique.
+
+- &reconnaissance
+  id: TA0043
+  name: Reconnaissance
+  object-type: tactic
+  description: |
+    The adversary is trying to gather information they can use to plan future operations. <a href="https://attack.mitre.org/tactics/TA0043">View Here at MITRE ATT&CK</a>
+
+- &resource_development
+  id: TA0042
+  name: Resource Development
+  object-type: tactic
+  description: |
+    The adversary is trying to establish resources they can use to support operations. <a href="https://attack.mitre.org/tactics/TA0042">View Here at MITRE ATT&CK</a>
+
+- &initial_access
+  id: TA0001
+  name: Initial Access
+  object-type: tactic
+  description: |
+    The adversary is trying to get into your network. <a href="https://attack.mitre.org/tactics/TA0001">View Here at MITRE ATT&CK</a>
+
+- &execution
+  id: TA0002
+  name: Execution
+  object-type: tactic
+  description: |
+    The adversary is trying to run malicious code. <a href="https://attack.mitre.org/tactics/TA0002">View Here at MITRE ATT&CK</a>
+
+- &privilege_escalation
+  id: TA0004
+  name: Privilege Escalation
+  object-type: tactic
+  description: |
+    The adversary is trying to gain higher-level permissions. <a href="https://attack.mitre.org/tactics/TA0004">View Here at MITRE ATT&CK</a>
+
+- &defense_evasion
+  id: TA0005
+  name: Defense Evasion
+  object-type: tactic
+  description: |
+    The adversary is trying to avoid being detected. <a href="https://attack.mitre.org/tactics/TA0005">View Here at MITRE ATT&CK</a>
+
+- &credential_access
+  id: TA0006
+  name: Credential Access
+  object-type: tactic
+  description: |
+    The adversary is trying to steal account names and passwords. <a href="https://attack.mitre.org/tactics/TA0006">View Here at MITRE ATT&CK</a>
+
+- &lateral_movement
+  id: TA0008
+  name: Lateral Movement
+  object-type: tactic
+  description: |
+    The adversary is trying to move through your environment. <a href="https://attack.mitre.org/tactics/TA0008">View Here at MITRE ATT&CK</a>
+
+- &collection
+  id: TA0009
+  name: Collection
+  object-type: tactic
+  description: |
+    The adversary is trying to gather data of interest to their goal. <a href="https://attack.mitre.org/tactics/TA0009">View Here at MITRE ATT&CK</a>
+
+- &impact
+  id: TA0040
+  name: Impact
+  object-type: tactic
+  description: |
+    The adversary is trying to manipulate, interrupt, or destroy your systems and data. <a href="https://attack.mitre.org/tactics/TA0040">View Here at MITRE ATT&CK</a>
+
+- &fraud
+  id: ADTA0001
+  name: Fraud
+  object-type: tactic
+  description: |
+    The adversary is trying to illicitly create, acquire, or utilize value-form. The adversary may also seek to destroy the victim's value-form without any personal gain.

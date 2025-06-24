@@ -1,0 +1,11 @@
+---
+
+id: AADAPT
+name: Adversarial Actions in Digital Asset Payment Technologies
+version: 4.4.0
+
+matrices:
+  - !include .
+
+data:
+  - !include case-studies/*.yaml

@@ -1,0 +1,21 @@
+---
+
+id: AADAPT
+name: AADAPT Matrix
+
+tactics:
+  - "{{reconnaissance.id}}"
+  - "{{resource_development.id}}"
+  - "{{initial_access.id}}"
+  - "{{execution.id}}"
+  - "{{privilege_escalation.id}}"
+  - "{{defense_evasion.id}}"
+  - "{{credential_access.id}}"
+  - "{{lateral_movement.id}}"
+  - "{{collection.id}}"
+  - "{{impact.id}}"
+  - "{{fraud.id}}"
+
+data:
+  - !include tactics.yaml
+  - !include techniques.yaml
