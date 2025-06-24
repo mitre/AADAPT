@@ -1,7 +1,5 @@
-# ATLAS
+# AADAPT
 
-MITRE ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems), is a knowledge base of adversary tactics, techniques, and case studies for machine learning (ML) systems based on real-world observations, demonstrations from ML red teams and security groups, and the state of the possible from academic research.
+MITRE Adversarial Actions in Digital Asset Payment Technologies (AADAPT) is a cyber threat framework that anticipates future and documents observed cyber threats to digital asset systems, in order to enable the reduction of risks posed by adversaries.  It is intended to provide comprehensive knowledge of threat behaviors, inform the development of innovative solutions, and give insights to secure digital asset systems and financial infrastructure.  AADAPT is meant to foster trust and enable growth in digital financial services.
 
-ATLAS is modeled after the MITRE ATT&CK® framework and its tactics and techniques are complementary to those in ATT&CK.  Machine learning is increasingly used across a variety of industries and there are a growing number of vulnerabilities.  We developed ATLAS to raise awareness of these threats and present them in a way familiar to security researchers.
-
-Visit the ATLAS website at https://atlas.mitre.org!
+Visit the ATLAS website at https://aadapt.mitre.org to see the framework
