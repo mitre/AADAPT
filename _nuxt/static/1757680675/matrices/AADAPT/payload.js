@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/matrices/AADAPT", {data:[{}],fetch:{},mutations:[]});
