@@ -31,6 +31,4 @@ To conceal their actions, the hackers presented a masked user interface to the w
 
 
 
-
-
 © 2025 THE MITRE CORPORATION. ALL RIGHTS RESERVED. APPROVED FOR PUBLIC RELEASE. DISTRIBUTION UNLIMITED. PUBLIC RELEASE CASE NUMBER 25-2215

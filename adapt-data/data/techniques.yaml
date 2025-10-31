@@ -792,6 +792,47 @@
       - "[[2] Vani, S., Doshi, M., Nanavati, A., & Kundu, A. (2022). Vulnerability Analysis of Smart Contracts.](https://arxiv.org/pdf/2212.07387.pdf)"
       - "[[3] Vulnerability: Timestamp Dependence. (2024). Retrieved March 6, 2025.](https://owasp.org/www-project-smart-contract-top-10/2023/en/src/SC03-timestamp-dependence.html)"
 
+- &supply_chain_compromise
+  id: ADT1195
+  name: Supply Chain Compromise
+  object-type: technique
+  contributors:
+    Chirag Agrawal, Web3Sec.News
+  ATT&CK-reference:
+    id: ADT1195
+    url: https://attack.mitre.org/techniques/T1195/
+  description: |
+     Adversaries may manipulate products or product delivery mechanisms prior to receipt by a final consumer for the purpose of data or system compromise.<br><br>Supply chain compromise can take place at any stage of the supply chain including:<br><ul><li>Manipulation of a development environment</li><li>Manipulation of source code repositories (public or private)</li><li>Manipulation of source code in open-source dependencies</li><li>Manipulation of software update/distribution mechanisms</li><li>Compromised/infected system images (multiple cases of removable media infected at the factory)</li><li>Replacement of legitimate software with modified versions</li><li>Sales of modified/counterfeit products to legitimate distributors</li></ul><br>While supply chain compromise can impact any component of hardware or software, adversaries looking to gain execution have often focused on malicious additions to legitimate software in distribution or update channels. Targeting may be specific to a desired victim set or malicious software may be distributed to a broad set of consumers but only move on to additional tactics on specific victims. Popular open-source projects that are used as dependencies in many applications may also be targeted as a means to add malicious code to users of the dependency.<br><br>The digital asset ecosystem relies on complex networks of third-party software, including blockchain libraries, wallet management tools, trading engines, and operational software. When adversaries compromise these dependencies, they can achieve objectives that go far beyond traditional system access, such as:<br><ul><li>Manipulating transaction logic to redirect funds to attacker-controlled wallets</li><li>Gaining persistent access to exchange hot wallets and operational systems</li><li>Extracting sensitive customer data from crypto platforms and DeFi protocols</li><li>Deploying cryptocurrency mining malware that leverages organizational resources</li></ul><br>The interconnected nature of the blockchain ecosystem means that a single compromised package can potentially affect thousands of downstream applications. Unlike traditional supply chain attacks where the impact might be limited to data theft or system access, digital asset supply chain compromises often result in immediate financial losses measured in millions of dollars.<br><br><a href=https://attack.mitre.org/techniques/T1195/ target="_blank"> To read more, please see the MITRE ATT&CK page for this technique</a>
+  tactics:
+     - "{{initial_access.id}}"
+  references:
+      - "[[1] Agrawal, C. (2025, August). Real-time lessons from BigONE Exchange $27M supply chain attack. Retrieved October 3, 2025.](https://www.guardrail.ai/blog/real-time-lessons-from-bigone-exchange-27m-supply-chain-attack)"
+      - "[[2] Jones, C. (2025, February 13). North Korea targets crypto developers via NPM supply chain attack. Retrieved October 8, 2025.](https://www.theregister.com/2025/02/13/north_korea_npm_crypto/)"
+      - "[[3] Lakshmanan, R. (2025, June 4). Malicious PyPI, npm, and Ruby Packages Exposed in Ongoing Open-Source Supply Chain Attacks. Retrieved October 8, 2025.](https://thehackernews.com/2025/06/malicious-pypi-npm-and-ruby-packages.html)"
+      - "[[4] Naraine, R. (2025, March 6). How Social Engineering Sparked a Billion-Dollar Supply Chain Cryptocurrency Heist. Retrieved October 8, 2025.](https://www.securityweek.com/how-social-engineering-sparked-a-billion-dollar-supply-chain-cryptocurrency-heist/)"
+      - "[[5] Roberts, P. (2024, December 5). Malware found in Solana npm library raises the bar for crypto security. Retrieved October 8, 2025.](https://www.reversinglabs.com/blog/malware-found-in-solana-npm-library-with-50m-downloads)"
+      - "[[6] van Arsdale, C. (2025, March 25). Crypto malware attacks: 23 supply chain incidents set off alarms. Retrieved October 8, 2025.](https://www.reversinglabs.com/blog/crypto-gets-a-target-on-its-back)"
+
+- &compromise_software_dependencies_and_development_tools
+  id: ADT1195.001
+  name: Compromise Software Dependencies and Development Tools
+  object-type: technique
+  contributors:
+    Chirag Agrawal, Web3Sec.News
+  ATT&CK-reference:
+    id: ADT1195.001
+    url: https://attack.mitre.org/techniques/T1195/001/
+  description: |
+     Adversaries may manipulate digital asset development libraries, dependencies, or third-party software components to inject malicious code that targets cryptocurrency operations, wallet management, or blockchain interactions.<br><br>The digital asset ecosystem relies heavily on interconnected open-source libraries, third-party development tools, and vendor-supplied software. From npm packages handling blockchain transactions to Docker images managing validator nodes, these dependencies form the backbone of cryptocurrency operations. Adversaries exploit this trust network to achieve objectives that would be nearly impossible through direct attacks.<br><br>When attackers target development dependencies, they can:<br><ul><li>Inject wallet-targeting malware into legitimate packages that developers trust and integrate into production systems</li><li>Compromise hot wallet operational logic through routine third-party software updates that bypass security reviews</li><li>Steal private keys and seed phrases silently during key generation, wallet creation, or testing operations</li><li>Manipulate transaction logic to redirect cryptocurrency transfers to attacker-controlled addresses</li><li>Establish persistent access to digital asset infrastructure through components that rarely face security scrutiny</li></ul><br><br><a href=https://attack.mitre.org/techniques/T1195/001/ target="_blank"> To read more, please see the MITRE ATT&CK page for this technique</a>
+  subtechnique-of: "{{supply_chain_compromise.id}}"
+  references:
+      - "[[1] Agrawal, C. (2025, August). Real-time lessons from BigONE Exchange $27M supply chain attack. Retrieved October 3, 2025.](https://www.guardrail.ai/blog/real-time-lessons-from-bigone-exchange-27m-supply-chain-attack)"
+      - "[[2] Jones, C. (2025, February 13). North Korea targets crypto developers via NPM supply chain attack. Retrieved October 8, 2025.](https://www.theregister.com/2025/02/13/north_korea_npm_crypto/)"
+      - "[[3] Lakshmanan, R. (2025, June 4). Malicious PyPI, npm, and Ruby Packages Exposed in Ongoing Open-Source Supply Chain Attacks. Retrieved October 8, 2025.](https://thehackernews.com/2025/06/malicious-pypi-npm-and-ruby-packages.html)"
+      - "[[4] Naraine, R. (2025, March 6). How Social Engineering Sparked a Billion-Dollar Supply Chain Cryptocurrency Heist. Retrieved October 8, 2025.](https://www.securityweek.com/how-social-engineering-sparked-a-billion-dollar-supply-chain-cryptocurrency-heist/)"
+      - "[[5] Roberts, P. (2024, December 5). Malware found in Solana npm library raises the bar for crypto security. Retrieved October 8, 2025.](https://www.reversinglabs.com/blog/malware-found-in-solana-npm-library-with-50m-downloads)"
+      - "[[6] van Arsdale, C. (2025, March 25). Crypto malware attacks: 23 supply chain incidents set off alarms. Retrieved October 8, 2025.](https://www.reversinglabs.com/blog/crypto-gets-a-target-on-its-back)"
+
 - &unsecured_credentials
   id: ADT1552
   name: Unsecured Credentials
@@ -825,7 +866,7 @@
   name: Use Anonymizing Services
   object-type: technique
   description: |
-     An adversary can use anonymizing services to obfuscate the origin and destination of digital asset transactions.   <br><br>By utilizing anonymizing services, the attacker can make it more difficult for authorities or investigators to trace the movement of stolen or illicit funds, effectively hiding their tracks. Adversaries can obfuscate digital asset transactions through Peer-to-Peer Exchanges, mixers or tumblers, or services such as CoinJoin.<br><ul><li></li></ul><br>Adversaries utilize anonymous services for: <br><ul><li>Financial gain: Adversaries can utilize these services to funnel cryptocurrency to their desired destination to ultimately exchange for fiat currency.</li></ul>
+     An adversary can use anonymizing services to obfuscate the origin and destination of digital asset transactions.   <br><br>By utilizing anonymizing services, the attacker can make it more difficult for authorities or investigators to trace the movement of stolen or illicit funds, effectively hiding their tracks. Adversaries can obfuscate digital asset transactions through Peer-to-Peer Exchanges, mixers or tumblers, or services such as CoinJoin.<br><br>Adversaries utilize anonymous services for: <br><ul><li>Financial gain: Adversaries can utilize these services to funnel cryptocurrency to their desired destination to ultimately exchange for fiat currency.</li></ul>
   tactics:
      - "{{defense_evasion.id}}"
   references:
